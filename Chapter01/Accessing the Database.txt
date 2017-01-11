@@ -1,0 +1,36 @@
+OBJECT Codeunit 50007 Customer Sales Inv. Amount
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            SalesLine@1000 : Record 37;
+            StartingDate@1001 : Date;
+            EndingDate@1002 : Date;
+          BEGIN
+            StartingDate := CALCDATE('<-1M>',WORKDATE);
+            EndingDate := WORKDATE;
+
+            SalesLine.SETRANGE("Sell-to Customer No.",'10000');
+            SalesLine.SETFILTER("Document Type",'%1|%2',SalesLine."Document Type"::Order,SalesLine."Document Type"::Invoice);
+            SalesLine.SETRANGE("Posting Date",StartingDate,EndingDate);
+            SalesLine.CALCSUMS("Line Amount");
+            MESSAGE(SalesAmountMsg,SalesLine.COUNT,SalesLine."Line Amount");
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      SalesAmountMsg@1000 : TextConst 'ENU=Total amount in %1 sales documents: %2';
+
+    BEGIN
+    END.
+  }
+}
+

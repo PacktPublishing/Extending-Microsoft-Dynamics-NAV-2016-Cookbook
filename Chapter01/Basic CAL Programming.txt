@@ -1,0 +1,56 @@
+OBJECT Codeunit 50000 Luhn
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            IF VerifyCheckSum(79927398712.0) THEN
+              MESSAGE(CorrectCheckSumMsg)
+            ELSE
+              MESSAGE(WrongCheckSumMsg);
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      CorrectCheckSumMsg@1000 : TextConst 'ENU=Account number has correct checksum';
+      WrongCheckSumMsg@1001 : TextConst 'ENU=Account number has wrong checksum';
+
+    LOCAL PROCEDURE VerifyCheckSum@2(AccountNumber@1000 : BigInteger) : Boolean;
+    VAR
+      Digits@1001 : ARRAY [11] OF Byte;
+      CheckSum@1003 : Integer;
+      i@1002 : Integer;
+    BEGIN
+      SplitNumber(Digits,AccountNumber);
+      FOR i := 1 TO 10 DO BEGIN
+        IF i MOD 2 = 1 THEN
+          CheckSum += (Digits[i] * 2) DIV 10 + (Digits[i] * 2) MOD 10;
+      END;
+
+      CheckSum := 10 - (CheckSum * 9) MOD 10;
+
+      EXIT(CheckSum = Digits[11]);
+    END;
+
+    LOCAL PROCEDURE SplitNumber@3(VAR Digits@1001 : ARRAY [11] OF Byte;AccountNumber@1002 : BigInteger);
+    VAR
+      i@1000 : Integer;
+    BEGIN
+      FOR i := 11 DOWNTO 1 DO BEGIN
+        Digits[i] := AccountNumber MOD 10;
+        AccountNumber := AccountNumber DIV 10;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

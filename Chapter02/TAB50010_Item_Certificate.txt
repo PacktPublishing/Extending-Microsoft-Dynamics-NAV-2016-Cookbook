@@ -1,0 +1,93 @@
+OBJECT Table 50010 Item Certificate
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnModify=BEGIN
+               IF "Item No." <> xRec."Item No." THEN
+                 UpdateItemOnActions;
+             END;
+
+    OnDelete=BEGIN
+               DeleteCertificateActions;
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;No.                 ;Code20        ;Description=Certificate No. }
+    { 2   ;   ;CA Code             ;Code20        ;TableRelation="Certification Authority".Code;
+                                                   CaptionML=ENU=Certification Authority;
+                                                   Description=Certification authority code }
+    { 3   ;   ;Item No.            ;Code20        ;TableRelation=Item.No. WHERE (Type=CONST(Inventory),
+                                                                                 Certificate Required=CONST(Yes)) }
+    { 4   ;   ;Issued Date         ;Date          ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Item Certificate Action"."Action Date" WHERE (Certificate No.=FIELD(No.),
+                                                                                                                     Action Type=CONST(Issued)));
+                                                   Editable=No }
+    { 5   ;   ;Last Prolonged Date ;Date          ;FieldClass=FlowField;
+                                                   CalcFormula=Max("Item Certificate Action"."Action Date" WHERE (Certificate No.=FIELD(No.),
+                                                                                                                  Action Type=CONST(Prolonged)));
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;No.                                     ;Clustered=Yes }
+    {    ;Item No.,CA Code                         }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE DeleteCertificateActions@1();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      ItemCertificateAction.SETRANGE("Certificate No.","No.");
+      ItemCertificateAction.DELETEALL;
+    END;
+
+    LOCAL PROCEDURE UpdateItemOnActions@2();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      ItemCertificateAction.SETRANGE("Certificate No.","No.");
+      ItemCertificateAction.MODIFYALL("Item No.","Item No.");
+    END;
+
+    PROCEDURE IsCertificateIssued@7() : Boolean;
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Certificate No.","No.");
+        SETRANGE("Action Type","Action Type"::Issued);
+
+        EXIT(NOT ISEMPTY);
+      END;
+    END;
+
+    PROCEDURE IsCertificateRevoked@6() : Boolean;
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Certificate No.","No.");
+        SETRANGE("Action Type","Action Type"::Revoked);
+
+        EXIT(NOT ISEMPTY);
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

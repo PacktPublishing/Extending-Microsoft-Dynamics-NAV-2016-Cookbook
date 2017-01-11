@@ -1,0 +1,45 @@
+OBJECT Query 50011 Customer Discount Groups
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OrderBy=Code=Ascending,
+            No=Ascending;
+  }
+  ELEMENTS
+  {
+    { 1   ;    ;DataItem;                    ;
+               DataItemTable=Table18 }
+
+    { 2   ;1   ;Column  ;                    ;
+               DataSource=No. }
+
+    { 3   ;1   ;Column  ;                    ;
+               DataSource=Name }
+
+    { 4   ;1   ;DataItem;                    ;
+               DataItemTable=Table340;
+               DataItemLink=Code=Customer."Customer Disc. Group";
+               DataItemLinkType=SQL Advanced Options;
+               SQLJoinType=Full Outer Join }
+
+    { 5   ;2   ;Column  ;                    ;
+               DataSource=Code }
+
+    { 6   ;2   ;Column  ;                    ;
+               DataSource=Description }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

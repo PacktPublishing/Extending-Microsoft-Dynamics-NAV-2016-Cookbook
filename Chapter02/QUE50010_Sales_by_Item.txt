@@ -1,0 +1,57 @@
+OBJECT Query 50010 Sales by Item
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OrderBy=Sum_Sales_Amount_Actual=Descending;
+  }
+  ELEMENTS
+  {
+    { 1   ;    ;DataItem;                    ;
+               DataItemTable=Table27;
+               DataItemTableFilter=Certificate Required=CONST(Yes) }
+
+    { 3   ;1   ;Column  ;                    ;
+               DataSource=No. }
+
+    { 4   ;1   ;Column  ;                    ;
+               DataSource=Description }
+
+    { 2   ;1   ;DataItem;                    ;
+               DataItemTable=Table5802;
+               DataItemTableFilter=Item Ledger Entry Type=FILTER(Sale);
+               DataItemLink=Item No.=Item."No.";
+               DataItemLinkType=Exclude Row If No Match }
+
+    { 7   ;2   ;Column  ;                    ;
+               DataSource=Invoiced Quantity;
+               MethodType=Totals;
+               Method=Sum }
+
+    { 5   ;2   ;Column  ;                    ;
+               DataSource=Cost Amount (Actual);
+               MethodType=Totals;
+               Method=Sum }
+
+    { 6   ;2   ;Column  ;                    ;
+               DataSource=Sales Amount (Actual);
+               MethodType=Totals;
+               Method=Sum }
+
+    { 8   ;2   ;Filter  ;                    ;
+               DataSource=Posting Date }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

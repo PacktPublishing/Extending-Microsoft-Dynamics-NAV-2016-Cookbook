@@ -1,0 +1,69 @@
+OBJECT Page 50010 Item Certificate
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50010;
+    PageType=Card;
+    OnAfterGetRecord=VAR
+                       ItemCertificateMgt@1000 : Codeunit 50010;
+                     BEGIN
+                       ExpirationDate := ItemCertificateMgt.GetCertificateExpirationDate("No.");
+                       IsCertificateOverdue := ExpirationDate < WORKDATE;
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=General;
+                GroupType=Group }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="CA Code" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Item No." }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr="Issued Date" }
+
+    { 9   ;2   ;Field     ;
+                Name=ExpirationDate;
+                CaptionML=ENU=Expiration Date;
+                SourceExpr=ExpirationDate;
+                Editable=FALSE;
+                Style=Attention;
+                StyleExpr=IsCertificateOverdue }
+
+    { 8   ;1   ;Part      ;
+                Name=CertificateActions;
+                CaptionML=ENU=Certificate Actions;
+                SubPageLink=Certificate No.=FIELD(No.);
+                PagePartID=Page50012;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+  }
+  CODE
+  {
+    VAR
+      ExpirationDate@1000 : Date;
+      IsCertificateOverdue@1001 : Boolean;
+
+    BEGIN
+    END.
+  }
+}
+

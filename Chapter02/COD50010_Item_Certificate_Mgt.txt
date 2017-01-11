@@ -1,0 +1,118 @@
+OBJECT Codeunit 50010 Item Certificate Mgt.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      NoValidCertificateErr@1000 : TextConst 'ENU=Item %1 does not have a valid certificate';
+
+    PROCEDURE GetCertificateExpirationDate@2(CertificateNo@1001 : Code[20]) : Date;
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Certificate No.",CertificateNo);
+        SETRANGE("Action Type","Action Type"::Revoked);
+        IF FINDLAST THEN
+          EXIT("Action Date");
+
+        SETRANGE("Action Type","Action Type"::Issued,"Action Type"::Prolonged);
+        IF FINDLAST THEN
+          EXIT("Expiration Date");
+      END;
+    END;
+
+    PROCEDURE GetItemCertExpirationDate@3(ItemNo@1000 : Code[20]) : Date;
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Item No.",ItemNo);
+        SETRANGE("Action Type","Action Type"::Revoked);
+        IF FINDLAST THEN
+          EXIT("Action Date");
+
+        SETRANGE("Action Type","Action Type"::Issued,"Action Type"::Prolonged);
+        IF FINDLAST THEN
+          EXIT("Expiration Date");
+      END;
+    END;
+
+    PROCEDURE GetLastCertificateActionDate@8(CertificateNo@1001 : Code[20]) : Date;
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Certificate No.",CertificateNo);
+        IF FINDLAST THEN
+          EXIT("Action Date");
+      END;
+
+      EXIT(0D);
+    END;
+
+    PROCEDURE FindActiveItemCertificate@1(ItemNo@1000 : Code[20];CertificateDate@1002 : Date) : Code[20];
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Item No.",ItemNo);
+        SETFILTER("Expiration Date",'>=%1',CertificateDate);
+        FINDLAST;
+
+        EXIT("Certificate No.");
+      END;
+    END;
+
+    PROCEDURE VerifyActiveItemCertificateExists@5(ItemNo@1001 : Code[20];CertificateDate@1000 : Date);
+    VAR
+      ItemCertificateAction@1002 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Item No.",ItemNo);
+        SETFILTER("Expiration Date",'>=%1',CertificateDate);
+        IF ISEMPTY THEN
+          ERROR(NoValidCertificateErr,ItemNo);
+      END;
+    END;
+
+    PROCEDURE CollectProlongedNotRevokedCertificates@4(VAR TempItemCertificate@1000 : TEMPORARY Record 50010);
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+      ItemCertificate@1002 : Record 50010;
+    BEGIN
+      TempItemCertificate.RESET;
+      TempItemCertificate.DELETEALL;
+
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Action Date",CALCDATE('<-1Y>',WORKDATE),WORKDATE);
+        SETFILTER("Expiration Date",'>%1',WORKDATE);
+        IF FINDSET THEN
+          REPEAT
+            IF NOT TempItemCertificate.GET(ItemCertificateAction."Certificate No.") THEN BEGIN
+              ItemCertificate.GET(ItemCertificateAction."Certificate No.");
+              IF NOT ItemCertificate.IsCertificateRevoked THEN BEGIN
+                TempItemCertificate := ItemCertificate;
+                TempItemCertificate.INSERT;
+              END;
+            END;
+          UNTIL NEXT = 0;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

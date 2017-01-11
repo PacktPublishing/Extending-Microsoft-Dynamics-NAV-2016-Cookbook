@@ -1,0 +1,37 @@
+OBJECT Page 50011 Certification Authority
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50011;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr=Code }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Name }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,51 @@
+OBJECT Page 50019 Run Background Posting
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    ActionList=ACTIONS
+    {
+      { 1       ;    ;ActionContainer;
+                      Name=test;
+                      ActionContainerType=NewDocumentItems }
+      { 3       ;1   ;Action    ;
+                      Name=Post Invoices;
+                      OnAction=BEGIN
+                                 STARTSESSION(PostingSessionId,CODEUNIT::"Post Invoices");
+                               END;
+                                }
+      { 4       ;1   ;Action    ;
+                      Name=Check Result;
+                      OnAction=VAR
+                                 SessionEvent@1000 : Record 2000000111;
+                               BEGIN
+                                 IF PostingSessionId = 0 THEN
+                                   ERROR('Session was not started');
+
+                                 SessionEvent.SETRANGE("User ID",USERID);
+                                 SessionEvent.SETRANGE("Session ID",PostingSessionId);
+                                 SessionEvent.SETRANGE("Event Type",SessionEvent."Event Type"::Logoff);
+                                 IF SessionEvent.FINDLAST THEN
+                                   MESSAGE(SessionEvent.Comment);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+  }
+  CODE
+  {
+    VAR
+      PostingSessionId@1001 : Integer;
+
+    BEGIN
+    END.
+  }
+}
+

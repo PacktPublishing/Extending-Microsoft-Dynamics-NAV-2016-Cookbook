@@ -1,0 +1,70 @@
+OBJECT XMLport 50010 Item Certificates
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  ELEMENTS
+  {
+    { [{14A9AF85-45A9-40CA-9407-AB3141242E93}];  ;ItemCertificates    ;Element ;Text     }
+
+    { [{1DD6260A-0C7E-4C5F-B971-6186D6E28BFF}];1 ;Certificate         ;Element ;Table   ;
+                                                  SourceTable=Table50010;
+                                                  Export::OnAfterGetRecord=BEGIN
+                                                                             "Item Certificate".CALCFIELDS("Issued Date");
+                                                                             IssuedDate := FORMAT("Item Certificate"."Issued Date",0,9);
+                                                                             ExpirationDate := FORMAT(ItemCertificateMgt.GetCertificateExpirationDate("Item Certificate"."No."),0,9);
+                                                                           END;
+                                                                            }
+
+    { [{D155EB5F-B472-445E-8C96-3A2767F5D5E7}];2 ;CertificateNo       ;Element ;Field   ;
+                                                  DataType=Code;
+                                                  SourceField=Item Certificate::No. }
+
+    { [{9B06BD23-8CD9-4C70-AA84-87C71C1B8070}];2 ;IssuedDate          ;Element ;Text    ;
+                                                  DataType=Date }
+
+    { [{FBC78C79-B965-4DFF-A22C-0F45716A448B}];2 ;ExpirationDate      ;Element ;Text     }
+
+    { [{D7CA2F68-11D1-48AA-8344-889B1E71E450}];2 ;Item                ;Element ;Table   ;
+                                                  SourceTable=Table27;
+                                                  SourceTableView=SORTING(Field1);
+                                                  LinkFields=Field1=FIELD(Field3);
+                                                  LinkTable=Item Certificate }
+
+    { [{8F8B8A50-1F7B-48A0-9DBB-ECF6D9760387}];3 ;ItemNo              ;Attribute;Field  ;
+                                                  DataType=Code;
+                                                  SourceField=Item::No. }
+
+    { [{E66F6518-61FB-4D19-933E-79E62C2EBFF2}];3 ;ItemDescription     ;Attribute;Field  ;
+                                                  DataType=Text;
+                                                  SourceField=Item::Description }
+
+  }
+  EVENTS
+  {
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  CODE
+  {
+    VAR
+      ItemCertificateMgt@1001 : Codeunit 50010;
+
+    BEGIN
+    END.
+  }
+}
+

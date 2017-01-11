@@ -1,0 +1,190 @@
+OBJECT Page 50015 Item Cert. - Certificates
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50013;
+    PageType=CardPart;
+    OnOpenPage=BEGIN
+                 RESET;
+                 IF NOT GET THEN BEGIN
+                   INIT;
+                   INSERT;
+                 END;
+
+                 SETRANGE("Date Filter",CALCDATE('<-1M>',WORKDATE),WORKDATE);
+                 SETRANGE("Future Period Filter",CALCDATE('<1D>',WORKDATE),CALCDATE('<1M>',WORKDATE));
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       ExpiredCertificates := CountExpiredCertificates;
+                       CertificatesDueToExpire := CountCertificatesDueToExpire;
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 5   ;1   ;Group     ;
+                Name=CertificatesCue;
+                GroupType=CueGroup }
+
+    { 2   ;2   ;Field     ;
+                SourceExpr="Certificates - Total";
+                DrillDownPageID=Certificates List }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Certificates - Issued";
+                OnDrillDown=BEGIN
+                              DrillDownIssued;
+                            END;
+                             }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Certificates - Revoked";
+                OnDrillDown=BEGIN
+                              DrillDownRevoked;
+                            END;
+                             }
+
+    { 6   ;2   ;Field     ;
+                Name=Certificates - Expired;
+                SourceExpr=ExpiredCertificates;
+                OnDrillDown=BEGIN
+                              DrillDownExpired;
+                            END;
+                             }
+
+    { 7   ;2   ;Field     ;
+                Name=CertificatesDueToExpire;
+                CaptionML=ENU=Certificates - Due to expire;
+                SourceExpr=CertificatesDueToExpire;
+                OnDrillDown=BEGIN
+                              DrillDownDueToExpire;
+                            END;
+                             }
+
+  }
+  CODE
+  {
+    VAR
+      ExpiredCertificates@1001 : Integer;
+      CertificatesDueToExpire@1000 : Integer;
+
+    LOCAL PROCEDURE CountExpiredCertificates@7() ExpiredCount : Integer;
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Action Type","Action Type"::Issued,"Action Type"::Prolonged);
+        SETFILTER("Expiration Date",Rec.GETFILTER("Future Period Filter"));
+        IF FINDSET THEN REPEAT
+          IF NOT IsCertificateRevoked("Certificate No.") THEN
+            ExpiredCount += 1;
+        UNTIL NEXT = 0;
+      END;
+    END;
+
+    LOCAL PROCEDURE CountCertificatesDueToExpire@2() : Integer;
+    VAR
+      ItemCertificateAction@1002 : Record 50012;
+    BEGIN
+      ItemCertificateAction.SETFILTER("Expiration Date",GETFILTER("Future Period Filter"));
+      EXIT(ItemCertificateAction.COUNT);
+    END;
+
+    LOCAL PROCEDURE DrillDownIssued@1();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Action Type","Action Type"::Issued);
+        SETFILTER("Expiration Date",Rec.GETFILTER("Date Filter"));
+        FillTempCertificateBuffer(ItemCertificateAction);
+      END;
+    END;
+
+    LOCAL PROCEDURE DrillDownRevoked@3();
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Action Type","Action Type"::Revoked);
+        SETFILTER("Expiration Date",Rec.GETFILTER("Date Filter"));
+        FillTempCertificateBufferExcludeRevoked(ItemCertificateAction);
+      END;
+    END;
+
+    LOCAL PROCEDURE DrillDownExpired@4();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      ItemCertificateAction.SETFILTER("Expiration Date",GETFILTER("Date Filter"));
+      FillTempCertificateBufferExcludeRevoked(ItemCertificateAction);
+    END;
+
+    LOCAL PROCEDURE DrillDownDueToExpire@5();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      ItemCertificateAction.SETFILTER("Expiration Date",GETFILTER("Future Period Filter"));
+      FillTempCertificateBuffer(ItemCertificateAction);
+    END;
+
+    LOCAL PROCEDURE FillTempCertificateBuffer@6(VAR ItemCertificateAction@1001 : Record 50012);
+    VAR
+      TempItemCertificate@1000 : TEMPORARY Record 50010;
+    BEGIN
+      WITH ItemCertificateAction DO
+        IF FINDSET THEN
+          REPEAT
+            InsertCertificateBufferRecord(TempItemCertificate,"Certificate No.");
+          UNTIL NEXT = 0;
+
+      PAGE.RUN(PAGE::"Certificates List",TempItemCertificate);
+    END;
+
+    LOCAL PROCEDURE FillTempCertificateBufferExcludeRevoked@9(VAR ItemCertificateAction@1000 : Record 50012);
+    VAR
+      TempItemCertificate@1001 : TEMPORARY Record 50010;
+    BEGIN
+      WITH ItemCertificateAction DO
+        IF FINDSET THEN
+          REPEAT
+            IF NOT IsCertificateRevoked("Certificate No.") THEN
+              InsertCertificateBufferRecord(TempItemCertificate,"Certificate No.");
+          UNTIL NEXT = 0;
+
+      PAGE.RUN(PAGE::"Certificates List",TempItemCertificate);
+    END;
+
+    LOCAL PROCEDURE IsCertificateRevoked@8(CertificateNo@1000 : Code[20]) : Boolean;
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        SETRANGE("Certificate No.",CertificateNo);
+        SETRANGE("Action Type","Action Type"::Revoked);
+
+        EXIT(NOT ISEMPTY);
+      END;
+    END;
+
+    LOCAL PROCEDURE InsertCertificateBufferRecord@11(VAR TempItemCertificate@1000 : TEMPORARY Record 50010;CertificateNo@1001 : Code[20]);
+    BEGIN
+      TempItemCertificate."No." := CertificateNo;
+      IF TempItemCertificate.INSERT THEN;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

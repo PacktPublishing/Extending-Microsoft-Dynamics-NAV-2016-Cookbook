@@ -1,0 +1,48 @@
+OBJECT Codeunit 50011 Compare Records
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            Customer@1000 : Record 18;
+            RecRef@1001 : ARRAY [2] OF RecordRef;
+          BEGIN
+            Customer.GET('10000');
+            RecRef[1].GETTABLE(Customer);
+            Customer.GET('20000');
+            RecRef[2].GETTABLE(Customer);
+
+            MESSAGE(FORMAT(CompareRecords(RecRef)));
+          END;
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE CompareRecords@1(RecRef@1001 : ARRAY [2] OF RecordRef) : Boolean;
+    VAR
+      FieldRef@1005 : ARRAY [2] OF FieldRef;
+      I@1004 : Integer;
+    BEGIN
+      FOR I := 2 TO RecRef[1].FIELDCOUNT DO BEGIN
+        FieldRef[1] := RecRef[1].FIELDINDEX(I);
+        FieldRef[2] := RecRef[2].FIELDINDEX(I);
+
+        IF UPPERCASE(FORMAT(FieldRef[1].CLASS)) = 'NORMAL' THEN
+          IF FieldRef[1].VALUE <> FieldRef[2].VALUE THEN
+            EXIT(FALSE);
+      END;
+
+      EXIT(TRUE);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

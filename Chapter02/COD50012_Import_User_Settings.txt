@@ -1,0 +1,51 @@
+OBJECT Codeunit 50012 Import User Settings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SingleInstance=Yes;
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      GlobalUserSettings@1001 : TEMPORARY Record 50014;
+
+    PROCEDURE GetUserSettings@2(VAR UserSettings@1006 : TEMPORARY Record 50014);
+    VAR
+      FileManagement@1005 : Codeunit 419;
+      ImportUserSettings@1004 : XMLport 50011;
+      SettingsFile@1003 : File;
+      XmlStream@1002 : InStream;
+      FileName@1001 : Text;
+      txt@1000 : Text;
+    BEGIN
+      UserSettings.RESET;
+      UserSettings.DELETEALL;
+
+      IF NOT GlobalUserSettings.FINDFIRST THEN BEGIN
+        IF FILE.UPLOADINTOSTREAM('Specify the file to upload','C:\Work','Xml files (*.xml)|*.xml',FileName,XmlStream) THEN BEGIN
+          ImportUserSettings.SETSOURCE(XmlStream);
+          ImportUserSettings.IMPORT;
+          ImportUserSettings.GetUserConfig(GlobalUserSettings);
+        END;
+      END;
+
+      IF GlobalUserSettings.FINDFIRST THEN BEGIN
+        UserSettings := GlobalUserSettings;
+        UserSettings.INSERT;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

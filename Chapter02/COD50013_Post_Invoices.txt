@@ -1,0 +1,46 @@
+OBJECT Codeunit 50013 Post Invoices
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            SalesHeader@1000 : Record 36;
+            PurchaseHeader@1001 : Record 38;
+            SalesPost@1002 : Codeunit 80;
+            PurchPost@1003 : Codeunit 90;
+          BEGIN
+            WITH PurchaseHeader DO BEGIN
+              SETRANGE("Document Type","Document Type"::Invoice);
+              IF FINDSET THEN
+                REPEAT
+                  Receive := TRUE;
+                  Invoice := TRUE;
+                  PurchPost.RUN(PurchaseHeader);
+                UNTIL NEXT = 0;
+            END;
+
+            WITH SalesHeader DO BEGIN
+              SETRANGE("Document Type","Document Type"::Invoice);
+              IF FINDSET THEN
+                REPEAT
+                  Ship := TRUE;
+                  Invoice := TRUE;
+                  SalesPost.RUN(SalesHeader);
+                UNTIL NEXT = 0;
+            END;
+          END;
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

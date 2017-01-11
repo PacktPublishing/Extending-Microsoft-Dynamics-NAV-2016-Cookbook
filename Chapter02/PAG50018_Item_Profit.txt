@@ -1,0 +1,141 @@
+OBJECT Page 50018 Item Profit
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5802;
+    PageType=Worksheet;
+    SourceTableTemporary=Yes;
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 GetItems;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF "Cost Amount (Actual)" <> 0 THEN
+                         ProfitPct := ROUND(("Sales Amount (Actual)" - "Cost Amount (Actual)") / "Cost Amount (Actual)" * 100,2);
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 12      ;    ;ActionContainer;
+                      Name=Settings;
+                      ActionContainerType=ActionItems }
+      { 13      ;1   ;Action    ;
+                      Name=Apply Default Date Formula;
+                      OnAction=VAR
+                                 UserSettings@1000 : TEMPORARY Record 50014;
+                                 ImportUserSettings@1001 : Codeunit 50012;
+                               BEGIN
+                                 ImportUserSettings.GetUserSettings(UserSettings);
+                                 IF UserSettings.FINDFIRST THEN BEGIN
+                                   FromDate := CALCDATE(UserSettings."From Date Formula",WORKDATE);
+                                   ToDate := CALCDATE(UserSettings."To Date Formula",WORKDATE);
+                                 END;
+
+                                 GetItems;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=ItemProfit;
+                CaptionML=ENU=Item Profit;
+                ContainerType=ContentArea }
+
+    { 9   ;1   ;Group     ;
+                Name=DateFilters;
+                CaptionML=ENU=Date Filters;
+                GroupType=Group }
+
+    { 10  ;2   ;Field     ;
+                Name=FromDate;
+                CaptionML=ENU=From Date;
+                SourceExpr=FromDate;
+                OnValidate=BEGIN
+                             GetItems;
+                           END;
+                            }
+
+    { 11  ;2   ;Field     ;
+                Name=ToDate;
+                CaptionML=ENU=To Date;
+                SourceExpr=ToDate;
+                OnValidate=BEGIN
+                             GetItems;
+                           END;
+                            }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                Editable=false;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Item No." }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Description }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Invoiced Quantity" }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr="Sales Amount (Actual)" }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr="Cost Amount (Actual)" }
+
+    { 8   ;2   ;Field     ;
+                Name=ProfitPct;
+                SourceExpr=ProfitPct }
+
+  }
+  CODE
+  {
+    VAR
+      ProfitPct@1000 : Integer;
+      FromDate@1001 : Date;
+      ToDate@1002 : Date;
+
+    LOCAL PROCEDURE GetItems@1();
+    VAR
+      SalesbyItem@1000 : Query 50010;
+      EntryNo@1003 : Integer;
+    BEGIN
+      IF FromDate = 0D THEN
+        FromDate := WORKDATE;
+      IF ToDate = 0D THEN
+        ToDate := WORKDATE;
+
+      RESET;
+      DELETEALL;
+
+      EntryNo := 1;
+      SalesbyItem.SETRANGE(Posting_Date,FromDate,ToDate);
+      IF SalesbyItem.OPEN THEN
+        WHILE SalesbyItem.READ DO BEGIN
+          "Entry No." := EntryNo;
+          "Item No." := SalesbyItem.No;
+          Description := SalesbyItem.Description;
+          "Invoiced Quantity" := -SalesbyItem.Sum_Invoiced_Quantity;
+          "Sales Amount (Actual)" := SalesbyItem.Sum_Sales_Amount_Actual;
+          "Cost Amount (Actual)" := -SalesbyItem.Sum_Cost_Amount_Actual;
+          INSERT;
+
+          EntryNo += 1;
+        END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

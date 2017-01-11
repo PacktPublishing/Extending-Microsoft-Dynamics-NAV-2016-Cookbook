@@ -1,0 +1,143 @@
+OBJECT Page 50013 Certificates List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table50010;
+    PageType=List;
+    CardPageID=Item Certificate;
+    ActionList=ACTIONS
+    {
+      { 8       ;    ;ActionContainer;
+                      Name=Certification;
+                      ActionContainerType=ActionItems }
+      { 9       ;1   ;Action    ;
+                      Name=IssueCertificate;
+                      CaptionML=ENU=Issue Certificate;
+                      Image=ReleaseDoc;
+                      OnAction=BEGIN
+                                 IssueCertificate;
+                               END;
+                                }
+      { 10      ;1   ;Action    ;
+                      Name=ProlongCertificate;
+                      CaptionML=ENU=Prolong Certificate;
+                      Image=ExtendedDataEntry;
+                      OnAction=BEGIN
+                                 //
+                               END;
+                                }
+      { 11      ;1   ;Action    ;
+                      Name=RevokeCertificate;
+                      CaptionML=ENU=Revoke Certificate;
+                      Image=CancelLine;
+                      OnAction=BEGIN
+                                 //
+                               END;
+                                }
+      { 12      ;    ;ActionContainer;
+                      Name=Related;
+                      ActionContainerType=RelatedInformation }
+      { 14      ;1   ;Action    ;
+                      Name=Item;
+                      RunObject=Page 30;
+                      RunPageLink=No.=FIELD(Item No.);
+                      Image=Item;
+                      OnAction=BEGIN
+                                 MESSAGE('OnAction');
+                               END;
+                                }
+      { 13      ;1   ;Action    ;
+                      Name=ViewActive;
+                      CaptionML=ENU=View Active;
+                      Image=Navigate;
+                      OnAction=VAR
+                                 TempItemCertificate@1000 : TEMPORARY Record 50010;
+                               BEGIN
+                                 ItemCertificateMgt.CollectProlongedNotRevokedCertificates(TempItemCertificate);
+                                 PAGE.RUN(PAGE::"Certificates List",TempItemCertificate);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="CA Code" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Item No." }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr="Issued Date" }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr="Last Prolonged Date" }
+
+  }
+  CODE
+  {
+    VAR
+      DateConflictErr@1001 : TextConst 'ENU=Action cannot be completed because of date comflict';
+      ItemCertificateMgt@1000 : Codeunit 50010;
+
+    LOCAL PROCEDURE IssueCertificate@1();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      IF NOT IsCertificateIssued THEN
+        InsertCertificateAction(ItemCertificateAction."Action Type"::Issued);
+    END;
+
+    LOCAL PROCEDURE ProlongCertificate@2();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE RevokeCertificate@3();
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      IF IsCertificateIssued THEN
+        IF NOT IsCertificateRevoked THEN
+          IF ItemCertificateMgt.GetLastCertificateActionDate("No.") > WORKDATE THEN
+            ERROR(DateConflictErr);
+
+      InsertCertificateAction(ItemCertificateAction."Action Type"::Revoked);
+    END;
+
+    LOCAL PROCEDURE InsertCertificateAction@4(ActionType@1001 : Option);
+    VAR
+      ItemCertificateAction@1000 : Record 50012;
+    BEGIN
+      WITH ItemCertificateAction DO BEGIN
+        VALIDATE("Certificate No.","No.");
+        VALIDATE("Action Date",WORKDATE);
+        VALIDATE("Action Type",ActionType);
+        IF ActionType <> "Action Type"::Revoked THEN
+          VALIDATE("Expiration Date",CALCDATE('<1Y>',WORKDATE));
+        VALIDATE("Item No.","Item No.");
+        INSERT(TRUE);
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

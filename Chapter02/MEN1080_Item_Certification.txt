@@ -1,0 +1,43 @@
+OBJECT MenuSuite 1080 Item Certification
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  MENUNODES
+  {
+    {                ;[{19A352FE-D90D-424E-B85F-CF3B8E98CF0E}] ;NextNodeID=[{EA496CA1-98DE-4F5D-96BA-96A15196F604}] }
+    { Menu           ;[{EA496CA1-98DE-4F5D-96BA-96A15196F604}] ;Name=Certification;
+                                                                CaptionML=ENU=Certification;
+                                                                MemberOfMenu=[{EA496CA1-98DE-4F5D-96BA-96A15196F604}];
+                                                                ParentNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                Image=14;
+                                                                IsShortcut=No;
+                                                                Visible=Yes;
+                                                                Enabled=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                FirstChild=[{13D25215-CC41-410E-9123-88C4CD4E5A1E}] }
+    { MenuGroup      ;[{13D25215-CC41-410E-9123-88C4CD4E5A1E}] ;Name=Item Certificates;
+                                                                CaptionML=ENU=Item Certificates;
+                                                                MemberOfMenu=[{EA496CA1-98DE-4F5D-96BA-96A15196F604}];
+                                                                ParentNodeID=[{EA496CA1-98DE-4F5D-96BA-96A15196F604}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                FirstChild=[{19949332-D494-44D4-9D86-B09F1E61B565}] }
+    { MenuItem       ;[{19949332-D494-44D4-9D86-B09F1E61B565}] ;Name=Certificates List;
+                                                                CaptionML=ENU=Certificates List;
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{EA496CA1-98DE-4F5D-96BA-96A15196F604}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=50013;
+                                                                ParentNodeID=[{13D25215-CC41-410E-9123-88C4CD4E5A1E}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Lists }
+  }
+}

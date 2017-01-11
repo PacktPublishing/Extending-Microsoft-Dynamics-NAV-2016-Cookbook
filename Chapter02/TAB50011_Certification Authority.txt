@@ -1,0 +1,31 @@
+OBJECT Table 50011 Certification Authority
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20         }
+    { 2   ;   ;Name                ;Text50         }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

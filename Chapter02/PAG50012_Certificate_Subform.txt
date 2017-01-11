@@ -1,0 +1,72 @@
+OBJECT Page 50012 Certificate Subform
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50012;
+    DelayedInsert=Yes;
+    PageType=ListPart;
+    OnNewRecord=VAR
+                  ItemCertificate@1001 : Record 50010;
+                BEGIN
+                  ItemCertificate.GET("Certificate No.");
+                  VALIDATE("Item No.",ItemCertificate."Item No.");
+                END;
+
+    OnInsertRecord=BEGIN
+                     CurrPage.UPDATE(FALSE);
+                   END;
+
+    OnModifyRecord=BEGIN
+                     CurrPage.UPDATE(FALSE);
+                   END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           IsExpirationDateEditable := CanEditExpirationDate;
+                         END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Action Date" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Action Type";
+                OnValidate=BEGIN
+                             IsExpirationDateEditable := CanEditExpirationDate;
+                           END;
+                            }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Expiration Date";
+                Editable=IsExpirationDateEditable }
+
+  }
+  CODE
+  {
+    VAR
+      IsExpirationDateEditable@1000 : Boolean;
+
+    LOCAL PROCEDURE CanEditExpirationDate@1() : Boolean;
+    BEGIN
+      EXIT("Action Type" <> "Action Type"::Revoked);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

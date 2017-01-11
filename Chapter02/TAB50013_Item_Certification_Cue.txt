@@ -1,0 +1,40 @@
+OBJECT Table 50013 Item Certification Cue
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Primary Key         ;Code10         }
+    { 2   ;   ;Certificates - Total;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Item Certificate") }
+    { 3   ;   ;Certificates - Issued;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Item Certificate Action" WHERE (Action Type=CONST(Issued),
+                                                                                                      Action Date=FIELD(Date Filter))) }
+    { 4   ;   ;Certificates - Revoked;Integer     ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Item Certificate Action" WHERE (Action Type=CONST(Revoked),
+                                                                                                      Action Date=FIELD(Date Filter))) }
+    { 6   ;   ;Date Filter         ;Date          ;FieldClass=FlowFilter }
+    { 7   ;   ;Future Period Filter;Date          ;FieldClass=FlowFilter }
+  }
+  KEYS
+  {
+    {    ;Primary Key                             ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,32 @@
+OBJECT Table 50014 User Settings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Primary Key         ;Code10         }
+    { 2   ;   ;From Date Formula   ;DateFormula    }
+    { 3   ;   ;To Date Formula     ;DateFormula    }
+  }
+  KEYS
+  {
+    {    ;Primary Key                             ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

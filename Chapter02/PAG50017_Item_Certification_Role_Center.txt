@@ -1,0 +1,38 @@
+OBJECT Page 50017 Item Certification Role Center
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    PageType=RoleCenter;
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=CertificationRoleCenter;
+                ContainerType=RoleCenterArea }
+
+    { 2   ;1   ;Group     ;
+                GroupType=Group }
+
+    { 3   ;2   ;Part      ;
+                PagePartID=Page50015;
+                PartType=Page }
+
+    { 4   ;2   ;Part      ;
+                PagePartID=Page50016;
+                PartType=Page }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

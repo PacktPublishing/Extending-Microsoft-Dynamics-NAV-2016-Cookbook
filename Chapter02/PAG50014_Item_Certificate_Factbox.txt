@@ -1,0 +1,53 @@
+OBJECT Page 50014 Item Certificate Factbox
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table50010;
+    PageType=CardPart;
+    OnAfterGetRecord=VAR
+                       ItemCertificateMgt@1000 : Codeunit 50010;
+                     BEGIN
+                       ExpirationDate := ItemCertificateMgt.GetCertificateExpirationDate("No.");
+                       IsCertificateOverdue := ExpirationDate < WORKDATE;
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Field     ;
+                SourceExpr="No." }
+
+    { 3   ;1   ;Field     ;
+                SourceExpr="CA Code" }
+
+    { 4   ;1   ;Field     ;
+                SourceExpr="Issued Date" }
+
+    { 5   ;1   ;Field     ;
+                Name=ExpirationDate;
+                SourceExpr=ExpirationDate;
+                Style=Attention;
+                StyleExpr=IsCertificateOverdue }
+
+  }
+  CODE
+  {
+    VAR
+      ExpirationDate@1000 : Date;
+      IsCertificateOverdue@1001 : Boolean;
+
+    BEGIN
+    END.
+  }
+}
+

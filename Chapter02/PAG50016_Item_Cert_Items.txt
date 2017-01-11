@@ -1,0 +1,58 @@
+OBJECT Page 50016 Item Cert. - Items
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table27;
+    SourceTableView=WHERE(Certificate Required=CONST(Yes));
+    PageType=ListPart;
+    OnAfterGetRecord=BEGIN
+                       ExpirationDate := ItemCertificateMgt.GetItemCertExpirationDate("No.");
+                       ItemCertificateOverdue := ExpirationDate < WORKDATE;
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="No.";
+                Style=Attention;
+                StyleExpr=ItemCertificateOverdue }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Description;
+                Style=Attention;
+                StyleExpr=ItemCertificateOverdue }
+
+    { 5   ;2   ;Field     ;
+                Name=Expiration Date;
+                SourceExpr=ExpirationDate;
+                Style=Attention;
+                StyleExpr=ItemCertificateOverdue }
+
+  }
+  CODE
+  {
+    VAR
+      ItemCertificateMgt@1001 : Codeunit 50010;
+      ExpirationDate@1000 : Date;
+      ItemCertificateOverdue@1002 : Boolean;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,54 @@
+OBJECT XMLport 50011 Import User Settings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  ELEMENTS
+  {
+    { [{43770F8A-5AC1-42D7-8F56-9ABDA8859D98}];  ;UserSerttings       ;Element ;Table   ;
+                                                  SourceTable=Table50014;
+                                                  Temporary=Yes;
+                                                  MaxOccurs=Once }
+
+    { [{5B17C4C4-31BF-46CD-9A43-891E801D5C98}];1 ;FromDate            ;Element ;Field   ;
+                                                  DataType=DateFormula;
+                                                  SourceField=User Settings::From Date Formula }
+
+    { [{9311070C-40F2-42A8-9009-20AC4B5F1121}];1 ;ToDate              ;Element ;Field   ;
+                                                  DataType=DateFormula;
+                                                  SourceField=User Settings::To Date Formula }
+
+  }
+  EVENTS
+  {
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  CODE
+  {
+
+    PROCEDURE GetUserConfig@1(VAR UserSettings@1000 : TEMPORARY Record 50014);
+    BEGIN
+      "User Settings".FINDFIRST;
+      UserSettings := "User Settings";
+      UserSettings.INSERT;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

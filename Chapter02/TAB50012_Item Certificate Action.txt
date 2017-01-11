@@ -1,0 +1,94 @@
+OBJECT Table 50012 Item Certificate Action
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               VerifyMandatoryFieldsAreFilled;
+               SetItemNo;
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;Certificate No.     ;Code20        ;TableRelation="Item Certificate";
+                                                   Editable=No }
+    { 2   ;   ;Action Date         ;Date           }
+    { 3   ;   ;Action Type         ;Option        ;OnValidate=BEGIN
+                                                                VerifyActionType;
+                                                                IF "Action Type" = "Action Type"::Revoked THEN
+                                                                  VALIDATE("Expiration Date",0D);
+                                                              END;
+
+                                                   OptionString=[ ,Issued,Prolonged,Revoked] }
+    { 4   ;   ;Expiration Date     ;Date          ;OnValidate=BEGIN
+                                                                IF "Action Type" = "Action Type"::Revoked THEN
+                                                                  TESTFIELD("Expiration Date",0D)
+                                                                ELSE IF "Expiration Date" < "Action Date" THEN
+                                                                  FIELDERROR("Expiration Date",' cannot be earlier than ' + FIELDNAME("Action Date"));
+                                                              END;
+                                                               }
+    { 5   ;   ;Item No.            ;Code20        ;Editable=No }
+  }
+  KEYS
+  {
+    {    ;Certificate No.,Action Date             ;Clustered=Yes }
+    {    ;Action Type                              }
+    {    ;Item No.                                 }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE VerifyActionType@1();
+    VAR
+      ItemCertificateAction@1001 : Record 50012;
+    BEGIN
+      IF "Action Type" <> "Action Type"::Issued THEN BEGIN
+        ItemCertificateAction.SETRANGE("Certificate No.","Certificate No.");
+        ItemCertificateAction.SETFILTER("Action Date",'<>%1',"Action Date");
+        ItemCertificateAction.SETRANGE("Action Type","Action Type"::Issued);
+        IF ItemCertificateAction.ISEMPTY THEN
+          ERROR('Certificate must be issued first');
+      END;
+
+      ItemCertificateAction.SETRANGE("Certificate No.","Certificate No.");
+      ItemCertificateAction.SETRANGE("Action Type","Action Type"::Revoked);
+      IF NOT ItemCertificateAction.ISEMPTY THEN
+        ERROR('Revoked certificate must be reissued');
+
+      IF "Action Type" = "Action Type"::Issued THEN BEGIN
+        ItemCertificateAction.SETRANGE("Action Type");
+        IF NOT ItemCertificateAction.ISEMPTY THEN
+          ERROR('%1 must the first action',"Action Type");
+      END;
+    END;
+
+    LOCAL PROCEDURE VerifyMandatoryFieldsAreFilled@2();
+    BEGIN
+      TESTFIELD("Action Date");
+      TESTFIELD("Action Type");
+      IF "Action Type" <> "Action Type"::Revoked THEN
+        TESTFIELD("Expiration Date");
+    END;
+
+    LOCAL PROCEDURE SetItemNo@4();
+    VAR
+      ItemCertificate@1000 : Record 50010;
+    BEGIN
+      ItemCertificate.GET("Certificate No.");
+      VALIDATE("Item No.",ItemCertificate."Item No.");
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

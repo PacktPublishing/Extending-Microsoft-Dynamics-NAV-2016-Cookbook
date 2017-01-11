@@ -1,0 +1,34 @@
+OBJECT Codeunit 50902 Database Trigger Event
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    [EventSubscriber(Table,18,OnBeforeInsertEvent)]
+    LOCAL PROCEDURE OnInsertVerifyRecord@1(VAR Rec@1000 : Record 18;RunTrigger@1001 : Boolean);
+    BEGIN
+      Rec.TESTFIELD("Salesperson Code");
+    END;
+
+    [EventSubscriber(Table,18,OnBeforeValidateEvent,"Salesperson Code")]
+    LOCAL PROCEDURE OnValidateVerifyRecord@2(VAR Rec@1000 : Record 18;VAR xRec@1001 : Record 18;CurrFieldNo@1002 : Integer);
+    BEGIN
+      Rec.TESTFIELD("Salesperson Code");
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

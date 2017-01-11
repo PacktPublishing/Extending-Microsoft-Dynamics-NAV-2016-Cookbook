@@ -1,0 +1,30 @@
+OBJECT Codeunit 50900 Item Ledger DateTime
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    [EventSubscriber(Codeunit,22,OnAfterInsertItemLedgEntry)]
+    LOCAL PROCEDURE UpdateItemLedgEntryDateTime@1(VAR ItemLedgerEntry@1000 : Record 32;VAR ItemJournalLine@1001 : Record 83);
+    BEGIN
+      ItemLedgerEntry.VALIDATE("Created Date",TODAY);
+      ItemLedgerEntry.VALIDATE("Created Time",TIME);
+      ItemLedgerEntry.MODIFY(TRUE);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

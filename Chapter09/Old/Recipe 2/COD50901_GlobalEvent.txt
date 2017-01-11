@@ -1,0 +1,50 @@
+OBJECT Codeunit 50901 Global Event
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      GlobalEventType@1000 : 'Company Open,Company Close';
+
+    [EventSubscriber(Codeunit,1,OnAfterCompanyOpen)]
+    LOCAL PROCEDURE LogCompanyOpen@1();
+    BEGIN
+      LogEvent(GlobalEventType::"Company Open");
+    END;
+
+    [EventSubscriber(Codeunit,1,OnAfterCompanyClose)]
+    LOCAL PROCEDURE LogCompanyClose@2();
+    BEGIN
+      LogEvent(GlobalEventType::"Company Close");
+    END;
+
+    LOCAL PROCEDURE LogEvent@3(EventType@1001 : Option);
+    VAR
+      CompanyEvent@1000 : Record 50901;
+    BEGIN
+      WITH CompanyEvent DO BEGIN
+        "Event Type" := EventType;
+        "User ID" := USERID;
+        "Company Name" := COMPANYNAME;
+        "Event Date" := TODAY;
+        "Event Time" := TIME;
+        INSERT;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

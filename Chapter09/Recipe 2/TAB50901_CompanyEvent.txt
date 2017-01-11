@@ -1,0 +1,36 @@
+OBJECT Table 50901 Company Event
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    DataPerCompany=No;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Event ID            ;Integer       ;AutoIncrement=Yes }
+    { 2   ;   ;Event Type          ;Option        ;OptionString=Company Open,Company Close }
+    { 3   ;   ;User ID             ;Code50         }
+    { 4   ;   ;Company Name        ;Text50         }
+    { 5   ;   ;Event Date          ;Date           }
+    { 6   ;   ;Event Time          ;Time           }
+  }
+  KEYS
+  {
+    {    ;Event ID                                ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

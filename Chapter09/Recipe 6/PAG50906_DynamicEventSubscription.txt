@@ -1,0 +1,51 @@
+OBJECT Page 50906 Dynamic Event Subscription
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnOpenPage=BEGIN
+                 SubscriptionActive := FALSE;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1       ;    ;ActionContainer;
+                      Name=Subscription;
+                      ActionContainerType=NewDocumentItems }
+      { 2       ;1   ;Action    ;
+                      Name=Start;
+                      Enabled=NOT SubscriptionActive;
+                      OnAction=BEGIN
+                                 BINDSUBSCRIPTION(DynamicEventSubscriber);
+                                 SubscriptionActive := TRUE;
+                               END;
+                                }
+      { 3       ;1   ;Action    ;
+                      Name=Stop;
+                      Enabled=SubscriptionActive;
+                      OnAction=BEGIN
+                                 UNBINDSUBSCRIPTION(DynamicEventSubscriber);
+                                 SubscriptionActive := FALSE;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+  }
+  CODE
+  {
+    VAR
+      DynamicEventSubscriber@1000 : Codeunit 50906;
+      SubscriptionActive@1001 : Boolean;
+
+    BEGIN
+    END.
+  }
+}
+

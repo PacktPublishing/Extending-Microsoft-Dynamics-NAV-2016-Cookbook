@@ -1,0 +1,33 @@
+OBJECT Codeunit 50903 Page Trigger Event
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    [EventSubscriber(Page,42,OnAfterActionEvent,Release)]
+    LOCAL PROCEDURE OnReleaseSalesOrderAssignUserID@2(VAR Rec@1000 : Record 36);
+    VAR
+      UserSetup@1001 : Record 91;
+    BEGIN
+      IF UserSetup.GET(USERID) THEN BEGIN
+        Rec.VALIDATE("Assigned User ID",USERID);
+        Rec.MODIFY(TRUE);
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

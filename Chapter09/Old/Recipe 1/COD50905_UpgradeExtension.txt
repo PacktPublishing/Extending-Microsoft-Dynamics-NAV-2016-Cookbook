@@ -1,0 +1,27 @@
+OBJECT Codeunit 50905 Upgrade Extension
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    PROCEDURE OnNavAppUpgradePerCompany@1();
+    BEGIN
+      NAVAPP.RESTOREARCHIVEDATA(DATABASE::"Item Ledger Entry");
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

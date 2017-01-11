@@ -1,0 +1,30 @@
+OBJECT Codeunit 50906 Dynamic Event Subscriber
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    EventSubscriberInstance=Manual;
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    [EventSubscriber(Codeunit,21,OnBeforeCheckItemJnlLine)]
+    LOCAL PROCEDURE VerifyJournalLineDimensions@2(VAR ItemJnlLine@1000 : Record 83);
+    BEGIN
+      ItemJnlLine.TESTFIELD("Shortcut Dimension 1 Code");
+      ItemJnlLine.TESTFIELD("Shortcut Dimension 2 Code");
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

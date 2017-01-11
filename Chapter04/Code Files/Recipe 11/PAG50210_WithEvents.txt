@@ -1,0 +1,143 @@
+OBJECT Page 50210 WithEvents
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50210;
+    PageType=Worksheet;
+    SourceTableTemporary=Yes;
+    OnQueryClosePage=BEGIN
+                       StopWatching;
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                ContainerType=ContentArea }
+
+    { 6   ;1   ;Group     ;
+                Name=Setup;
+                GroupType=Group }
+
+    { 2   ;2   ;Field     ;
+                Name=DirectoryName;
+                CaptionML=ENU=Directory Name;
+                SourceExpr=DirectoryName;
+                OnValidate=BEGIN
+                             IF DirectoryName = '' THEN
+                               StopWatching
+                             ELSE
+                               StartWatching;
+                           END;
+                            }
+
+    { 3   ;1   ;Group     ;
+                Name=Events;
+                Editable=FALSE;
+                GroupType=Repeater }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Path }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr=Name }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Change Type" }
+
+  }
+  CODE
+  {
+    VAR
+      FileSystemWatcher@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileSystemWatcher" WITHEVENTS;
+      DirectoryName@1001 : Text;
+      LastEventID@1002 : Integer;
+
+    LOCAL PROCEDURE StartWatching@1();
+    VAR
+      String@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String";
+    BEGIN
+      IF ISNULL(FileSystemWatcher) THEN
+        FileSystemWatcher := FileSystemWatcher.FileSystemWatcher;
+
+      String := DirectoryName;
+      String.Replace('\\','\\\\');
+      FileSystemWatcher.Path := String;
+      FileSystemWatcher.IncludeSubdirectories := TRUE;
+      FileSystemWatcher.EnableRaisingEvents := TRUE;
+    END;
+
+    LOCAL PROCEDURE StopWatching@2();
+    BEGIN
+      IF ISNULL(FileSystemWatcher) THEN
+        EXIT;
+
+      FileSystemWatcher.EnableRaisingEvents := FALSE;
+      CLEAR(FileSystemWatcher);
+    END;
+
+    LOCAL PROCEDURE LogChange@4(EventArgs@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileSystemEventArgs");
+    VAR
+      ChangeTypes@1001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.WatcherChangeTypes";
+    BEGIN
+      LastEventID += 1;
+      ID := LastEventID;
+      Path := EventArgs.FullPath;
+      Name := EventArgs.Name;
+
+      CASE 0 OF
+        EventArgs.ChangeType.CompareTo(ChangeTypes.Changed):
+          "Change Type" := "Change Type"::Changed;
+        EventArgs.ChangeType.CompareTo(ChangeTypes.Created):
+          "Change Type" := "Change Type"::Created;
+        EventArgs.ChangeType.CompareTo(ChangeTypes.Deleted):
+          "Change Type" := "Change Type"::Deleted;
+        EventArgs.ChangeType.CompareTo(ChangeTypes.Renamed):
+          "Change Type" := "Change Type"::Renamed;
+      END;
+
+      INSERT(TRUE);
+      FINDLAST;
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    EVENT FileSystemWatcher@1000::Changed@26(sender@1001 : Variant;e@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileSystemEventArgs");
+    BEGIN
+      LogChange(e);
+    END;
+
+    EVENT FileSystemWatcher@1000::Created@27(sender@1001 : Variant;e@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileSystemEventArgs");
+    BEGIN
+      LogChange(e);
+    END;
+
+    EVENT FileSystemWatcher@1000::Deleted@28(sender@1001 : Variant;e@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileSystemEventArgs");
+    BEGIN
+      LogChange(e);
+    END;
+
+    EVENT FileSystemWatcher@1000::Error@29(sender@1001 : Variant;e@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.ErrorEventArgs");
+    BEGIN
+    END;
+
+    EVENT FileSystemWatcher@1000::Renamed@30(sender@1001 : Variant;e@1000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.RenamedEventArgs");
+    BEGIN
+      LogChange(e);
+    END;
+
+    EVENT FileSystemWatcher@1000::Disposed@31(sender@1001 : Variant;e@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.EventArgs");
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

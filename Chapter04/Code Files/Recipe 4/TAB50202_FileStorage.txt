@@ -1,0 +1,33 @@
+OBJECT Table 50202 File Storage
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer       ;AutoIncrement=Yes }
+    { 2   ;   ;File Name           ;Text250        }
+    { 3   ;   ;Document            ;BLOB           }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

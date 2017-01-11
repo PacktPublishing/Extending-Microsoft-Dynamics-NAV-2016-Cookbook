@@ -1,0 +1,61 @@
+OBJECT Page 50206 GenericList
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    PageType=Worksheet;
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=Query;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Field     ;
+                CaptionML=ENU=Search Item;
+                SourceExpr=SearchText;
+                OnValidate=BEGIN
+                             Search;
+                           END;
+                            }
+
+  }
+  CODE
+  {
+    VAR
+      SearchText@1000 : Text;
+
+    LOCAL PROCEDURE Search@1();
+    VAR
+      Item@1003 : Record 27;
+      List@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      SearchResult@1000 : Integer;
+    BEGIN
+      List := List.List;
+
+      Item.FINDSET;
+      REPEAT
+        List.Add(Item.Description);
+      UNTIL Item.NEXT = 0;
+
+      List.Sort;
+      SearchResult := List.BinarySearch(SearchText);
+      IF SearchResult > 0 THEN
+        MESSAGE('Exact match: ' + FORMAT(List.Item(SearchResult)))
+      ELSE IF SearchResult = -(List.Count + 1) THEN
+        MESSAGE('No match')
+      ELSE
+        MESSAGE('Closest match: ' + FORMAT(List.Item(-(SearchResult + 1))));
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

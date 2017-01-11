@@ -1,0 +1,79 @@
+OBJECT Page 50208 TableFieldsFactbox
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table2000000041;
+    PageType=ListPart;
+    SourceTableTemporary=Yes;
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="No." }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr=FieldName }
+
+  }
+  CODE
+  {
+    VAR
+      TableID@1000 : Integer;
+
+    PROCEDURE SetTableNo@1(NewTableID@1000 : Integer);
+    BEGIN
+      TableID := NewTableID;
+      IF TableID > 0 THEN
+        UpdateView;
+    END;
+
+    LOCAL PROCEDURE UpdateView@2();
+    VAR
+      ObjectMetadata@1004 : Record 2000000071;
+      XmlDocument@1003 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";
+      NamespaceMgr@1002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNamespaceManager";
+      XmlNodeList@1001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeList";
+      XmlNode@1005 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+      Stream@1000 : InStream;
+    BEGIN
+      DELETEALL;
+
+      ObjectMetadata.GET(ObjectMetadata."Object Type"::Table,TableID);
+      ObjectMetadata.CALCFIELDS(Metadata);
+      ObjectMetadata.Metadata.CREATEINSTREAM(Stream);
+
+      XmlDocument := XmlDocument.XmlDocument;
+      XmlDocument.Load(Stream);
+
+      NamespaceMgr := NamespaceMgr.XmlNamespaceManager(XmlDocument.NameTable);
+      NamespaceMgr.AddNamespace('ns',XmlDocument.DocumentElement.NamespaceURI);
+      XmlNodeList := XmlDocument.SelectNodes('/ns:MetaTable/ns:Fields/ns:Field[ns:TableRelations]',NamespaceMgr);
+
+      FOREACH XmlNode IN XmlNodeList DO BEGIN
+        TableNo := TableID;
+        EVALUATE("No.",XmlNode.Attributes.GetNamedItem('ID').Value);
+        FieldName := XmlNode.Attributes.GetNamedItem('Name').InnerText;
+        INSERT;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,97 @@
+OBJECT Page 50201 ItemRegEx
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table27;
+    PageType=Worksheet;
+    SourceTableTemporary=Yes;
+    ActionList=ACTIONS
+    {
+      { 5       ;    ;ActionContainer;
+                      Name=Items;
+                      ActionContainerType=ActionItems }
+      { 9       ;1   ;Action    ;
+                      Name=Save to File;
+                      OnAction=VAR
+                                 FileManagement@1001 : Codeunit 419;
+                                 File@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+                                 Lines@1002 : Text;
+                                 NewLine@1003 : Char;
+                                 FilePath@1004 : Text;
+                               BEGIN
+                                 IF FINDSET THEN BEGIN
+                                   NewLine := 13;
+
+                                   REPEAT
+                                     Lines := Lines + "No." + ' ' + Description + FORMAT(NewLine);
+                                   UNTIL NEXT = 0;
+
+                                   FilePath := FileManagement.SaveFileDialog('','','Text files|*.txt');
+                                   IF FilePath <> '' THEN
+                                     File.WriteAllText(FilePath,Lines);
+                                 END;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=RegExContainer;
+                ContainerType=ContentArea }
+
+    { 7   ;1   ;Group     ;
+                Name=RegExFilter;
+                CaptionML=ENU=" RegEx Filter";
+                GroupType=Group }
+
+    { 8   ;2   ;Field     ;
+                Name=SearchExpression;
+                CaptionML=ENU=Search Expression;
+                SourceExpr=SearchExpression;
+                OnValidate=VAR
+                             Item@1000 : Record 27;
+                             RegEx@1001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.RegularExpressions.Regex";
+                           BEGIN
+                             RESET;
+                             DELETEALL;
+                             IF Item.FINDSET THEN
+                               REPEAT
+                                 IF RegEx.IsMatch(Item.Description,SearchExpression) THEN BEGIN
+                                   "No." := Item."No.";
+                                   Description := Item.Description;
+                                   INSERT;
+                                 END;
+                               UNTIL Item.NEXT = 0;
+                           END;
+                            }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                Editable=FALSE;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Description }
+
+  }
+  CODE
+  {
+    VAR
+      SearchExpression@1000 : Text;
+
+    BEGIN
+    END.
+  }
+}
+

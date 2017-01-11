@@ -1,0 +1,126 @@
+OBJECT Page 50209 YahooStock
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50208;
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 8       ;    ;ActionContainer;
+                      Name=Finance;
+                      ActionContainerType=ActionItems }
+      { 9       ;1   ;Action    ;
+                      Name=GetData;
+                      CaptionML=ENU=Get Data;
+                      Image=GetLines;
+                      OnAction=VAR
+                                 HttpWebRequest@1003 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebRequest";
+                                 HttpWebResponse@1002 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebResponse";
+                                 DotNetString@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String";
+                                 CharArray@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+                                 Type@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Type";
+                                 ResponseStream@1001 : InStream;
+                                 ResponseText@1004 : Text;
+                                 Separator@1008 : Char;
+                                 BytesRead@1010 : Integer;
+                               BEGIN
+                                 HttpWebRequest := HttpWebRequest.Create('http://finance.yahoo.com/d/quotes.csv?s=MSFT+YHOO+GOOG+ORCL+AAPL&f=snl1d1cv');
+                                 HttpWebResponse := HttpWebRequest.GetResponse;
+                                 ResponseStream := HttpWebResponse.GetResponseStream;
+
+                                 REPEAT
+                                   BytesRead := ResponseStream.READTEXT(ResponseText);
+                                   IF BytesRead > 0 THEN BEGIN
+                                     DotNetString := ResponseText;
+
+                                     CharArray := CharArray.CreateInstance(Type.GetType('System.Char'),1);
+                                     Separator := ',';
+                                     CharArray.SetValue(Separator,0);
+
+                                     SaveResponseData(DotNetString.Split(CharArray));
+                                   END;
+                                 UNTIL BytesRead = 0;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr=Symbol }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Trade Date" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr=Name }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr=Change }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr=Volume }
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE FormatString@17(String@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String") : Text;
+    BEGIN
+      EXIT(DELCHR(String,'<>','"'));
+    END;
+
+    LOCAL PROCEDURE StringToDecimal@1(String@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String") : Decimal;
+    VAR
+      CultureInfo@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Globalization.CultureInfo";
+      Convert@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+    BEGIN
+      CultureInfo := CultureInfo.CultureInfo('en-US');
+      EXIT(Convert.ToDecimal(String,CultureInfo));
+    END;
+
+    LOCAL PROCEDURE StringToDate@2(String@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String") : Date;
+    VAR
+      CultureInfo@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Globalization.CultureInfo";
+      Convert@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+    BEGIN
+      CultureInfo := CultureInfo.CultureInfo('en-US');
+      EXIT(DT2DATE(Convert.ToDateTime(String,CultureInfo)));
+    END;
+
+    LOCAL PROCEDURE SaveResponseData@3(StringArray@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array");
+    VAR
+      YahooStock@1000 : Record 50208;
+    BEGIN
+      WITH YahooStock DO BEGIN
+        INIT;
+        Symbol := FormatString(StringArray.GetValue(0));
+        Name := FormatString(StringArray.GetValue(1));
+        Price := StringToDecimal(FormatString(StringArray.GetValue(2)));
+        "Trade Date" := StringToDate(FormatString(StringArray.GetValue(3)));
+        Change := FormatString(StringArray.GetValue(4));
+        EVALUATE(Volume,StringArray.GetValue(5));
+        IF NOT INSERT THEN
+          MODIFY;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

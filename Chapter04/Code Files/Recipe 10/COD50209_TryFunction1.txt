@@ -1,0 +1,47 @@
+OBJECT Codeunit 50209 TryFunction1
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            DotNetExceptionHandler@1000 : Codeunit 1291;
+          BEGIN
+            IF NOT GetDataFromRemoteSource THEN BEGIN;
+              MESSAGE(WebRequestFailedErr,GETLASTERRORTEXT);
+
+              GetDataFromLocalSource;
+            END;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebRequestFailedErr@1000 : TextConst 'ENU=Web request failed.\Message received from component:\%1';
+
+    [TryFunction]
+    LOCAL PROCEDURE GetDataFromRemoteSource@1();
+    VAR
+      HttpWebRequest@1002 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebRequest";
+      HttpWebResponse@1003 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebResponse";
+    BEGIN
+      HttpWebRequest := HttpWebRequest.Create('http://unknown');
+      HttpWebResponse := HttpWebRequest.GetResponse;
+    END;
+
+    LOCAL PROCEDURE GetDataFromLocalSource@2();
+    BEGIN
+      MESSAGE('Getting data from local source.');
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,36 @@
+OBJECT Table 50208 Yahoo Stock
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Symbol              ;Code10         }
+    { 2   ;   ;Trade Date          ;Date           }
+    { 3   ;   ;Name                ;Text100        }
+    { 4   ;   ;Change              ;Text30         }
+    { 5   ;   ;Volume              ;Decimal        }
+    { 6   ;   ;Price               ;Decimal        }
+  }
+  KEYS
+  {
+    {    ;Symbol,Trade Date                       ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

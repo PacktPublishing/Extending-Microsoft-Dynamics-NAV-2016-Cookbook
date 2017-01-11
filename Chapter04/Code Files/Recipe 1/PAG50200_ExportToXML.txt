@@ -1,0 +1,147 @@
+OBJECT Page 50200 ExportToXml
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table2000000038;
+    SourceTableView=WHERE(Object Type=CONST(TableData));
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 5       ;    ;ActionContainer;
+                      Name=Export;
+                      ActionContainerType=ActionItems }
+      { 6       ;1   ;Action    ;
+                      Name=Export Table;
+                      OnAction=BEGIN
+                                 ExportTable;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Object ID" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Object Name" }
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE ExportTable@1();
+    VAR
+      XmlDoc@1005 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";
+      RootNode@1004 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+      RecordNode@1003 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+      RecRef@1002 : RecordRef;
+      FieldRef@1001 : FieldRef;
+      I@1000 : Integer;
+    BEGIN
+      RecRef.OPEN("Object ID");
+      IF RecRef.ISEMPTY THEN
+        EXIT;
+
+      CreateXmlDocument(XmlDoc,RecRef);
+      RootNode := XmlDoc.DocumentElement;
+
+      RecRef.FINDSET;
+      REPEAT
+        CreateXmlNode(RecordNode,XmlDoc,'Record','');
+        RootNode.AppendChild(RecordNode);
+        FOR I := 1 TO RecRef.FIELDCOUNT DO BEGIN
+          FieldRef := RecRef.FIELDINDEX(I);
+          IF UPPERCASE(FORMAT(FieldRef.CLASS)) IN ['NORMAL','FLOWFIELD'] THEN BEGIN
+            IF UPPERCASE(FORMAT(FieldRef.CLASS)) = 'FLOWFIELD' THEN
+              FieldRef.CALCFIELD;
+
+            AppendChildNode(RecordNode,XmlDoc,FieldRef.NAME,FORMAT(FieldRef.VALUE));
+          END;
+        END;
+      UNTIL RecRef.NEXT = 0;
+
+      SaveToFile(XmlDoc);
+    END;
+
+    LOCAL PROCEDURE AppendChildNode@1170000002(VAR ParentNode@1170000001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";VAR XmlDoc@1170000000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";NodeName@1000 : Text;NodeValue@1001 : Text);
+    VAR
+      ChildNode@1170000005 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+    BEGIN
+      IF CreateXmlNode(ChildNode,XmlDoc,CONVERTSTR(NodeName,' &<>''"%/\()[]{}^','________________'),NodeValue) THEN
+        ParentNode.AppendChild(ChildNode);
+    END;
+
+    PROCEDURE CreateXmlDocument@1170000001(VAR XmlDoc@1170000002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";RecRef@1000 : RecordRef);
+    VAR
+      XmlDeclaration@1170000000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDeclaration";
+      ReportNode@1170000003 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+    BEGIN
+      XmlDoc := XmlDoc.XmlDocument;
+      XmlDeclaration := XmlDoc.CreateXmlDeclaration('1.0','UTF-8','yes');
+      XmlDoc.AppendChild(XmlDeclaration);
+
+      CreateTableElement(ReportNode,XmlDoc,RecRef);
+    END;
+
+    LOCAL PROCEDURE CreateTableElement@1170000009(VAR TableNode@1170000003 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";VAR XmlDoc@1170000001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";RecRef@1001 : RecordRef);
+    BEGIN
+      TableNode := XmlDoc.CreateElement('Table');
+      XmlDoc.AppendChild(TableNode);
+
+      CreateXmlAttribute(TableNode,XmlDoc,'ID',FORMAT(RecRef.NUMBER));
+      CreateXmlAttribute(TableNode,XmlDoc,'Name',FORMAT(RecRef.NAME));
+    END;
+
+    LOCAL PROCEDURE CreateXmlNode@1170000003(VAR ChildNode@1170000001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";XmlDoc@1170000000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";NodeName@1170000003 : Text;NodeValue@1170000002 : Text) : Boolean;
+    VAR
+      TextNode@1170000004 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+    BEGIN
+      IF NodeName = '' THEN
+        EXIT(FALSE);
+
+      ChildNode := XmlDoc.CreateElement(NodeName);
+      TextNode := XmlDoc.CreateTextNode(NodeValue);
+      ChildNode.AppendChild(TextNode);
+
+      EXIT(TRUE);
+    END;
+
+    LOCAL PROCEDURE CreateXmlAttribute@3(VAR XmlNode@1002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";VAR XmlDoc@1001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";AttributeName@1003 : Text;AttributeValue@1004 : Text);
+    VAR
+      XmlAttribute@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlAttribute";
+    BEGIN
+      XmlAttribute := XmlDoc.CreateAttribute('',AttributeName,'');
+      XmlAttribute.Value := AttributeValue;
+      XmlNode.Attributes.Append(XmlAttribute);
+    END;
+
+    LOCAL PROCEDURE SaveToFile@2(XmlDoc@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument");
+    VAR
+      FileManagement@1001 : Codeunit 419;
+      FilePath@1002 : Text;
+    BEGIN
+      FilePath := FileManagement.SaveFileDialog('Save xml document','','xml files|*.xml');
+      XmlDoc.Save(FilePath);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,32 @@
+OBJECT Codeunit 50800 Post Code Info
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    PROCEDURE GetCityByPostCode@1(PostCode@1001 : Code[20]) : Text[30];
+    VAR
+      PostCodeCatalog@1000 : Record 225;
+    BEGIN
+      PostCodeCatalog.SETRANGE(Code,PostCode);
+      PostCodeCatalog.FINDFIRST;
+      EXIT(PostCodeCatalog.City);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

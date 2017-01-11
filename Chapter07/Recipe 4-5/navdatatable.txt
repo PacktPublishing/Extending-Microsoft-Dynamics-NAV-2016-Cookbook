@@ -1,0 +1,31 @@
+function UpdateDataTable(jsonString)
+{	
+	var data = JSON.parse(jsonString);
+
+	var source =
+	{
+		dataType: 'json',
+		dataFields: [
+			{ name: 'No_' },
+			{ name: 'Name' },
+		],
+		localData: data
+	};
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	
+    $(document).ready(function () {
+        $("#dataTable").jqxDataTable(
+        {
+			source: dataAdapter,
+            altRows: true,
+            sortable: true,
+			columnsResize: true,
+			width: 600,
+			height: 400,
+            columns: [
+				{ text: 'No.', dataField: 'No_', width: 100 },
+                { text: 'Name', dataField: 'Name', width: 100 },
+            ]
+        });
+    });
+}

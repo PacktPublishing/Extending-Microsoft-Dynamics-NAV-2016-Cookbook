@@ -1,0 +1,61 @@
+OBJECT Page 50700 NavWebBrowser
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    ActionList=ACTIONS
+    {
+      { 3       ;    ;ActionContainer;
+                      Name=BrowserActions;
+                      CaptionML=ENU=Browser Actions;
+                      ActionContainerType=ActionItems }
+      { 4       ;1   ;Action    ;
+                      Name=Navigate;
+                      OnAction=BEGIN
+                                 NavigateToAddress;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=BrowserArea;
+                ContainerType=ContentArea }
+
+    { 5   ;1   ;Field     ;
+                Name=Address;
+                SourceExpr=Address;
+                OnValidate=BEGIN
+                             NavigateToAddress;
+                           END;
+                            }
+
+    { 2   ;1   ;Field     ;
+                Name=WebBrowser;
+                CaptionML=ENU=Web Browser;
+                ControlAddIn=[NavWebBrowserControl;PublicKeyToken=e1c495ba8bddd8b7];
+                ShowCaption=No }
+
+  }
+  CODE
+  {
+    VAR
+      Address@1000 : Text;
+
+    LOCAL PROCEDURE NavigateToAddress@1();
+    BEGIN
+      CurrPage.WebBrowser.Navigate(Address);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

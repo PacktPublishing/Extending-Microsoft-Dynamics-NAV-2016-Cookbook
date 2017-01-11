@@ -1,0 +1,45 @@
+OBJECT Page 50703 DatabaseFieldBinding
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.10.16;
+    Time=[ 0:50:58];
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table18;
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=Customer;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Field     ;
+                Name=CustomerNo;
+                CaptionML=ENU=No.;
+                SourceExpr="No.";
+                Editable=FALSE;
+                ControlAddIn=[NavDatabaseFieldControl;PublicKeyToken=d66a4c70351019ac];
+                OnControlAddIn=BEGIN
+                                 CurrPage.CustomerNo.Editable := FALSE;
+                               END;
+                                }
+
+    { 3   ;1   ;Field     ;
+                Name=CustomerName;
+                CaptionML=ENU=Name;
+                SourceExpr=Name;
+                ControlAddIn=[NavDatabaseFieldControl;PublicKeyToken=d66a4c70351019ac] }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

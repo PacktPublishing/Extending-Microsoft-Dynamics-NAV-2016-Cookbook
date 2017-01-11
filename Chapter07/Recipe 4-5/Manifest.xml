@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+    <Resources>
+        <Script>navdatatable.js</Script>
+		<StyleSheet>jqx.base.css</StyleSheet>
+		<Script>jquery-1.11.1.min.js</Script>
+		<Script>jqxcore.js</Script>
+		<Script>jqxdata.js</Script>
+		<Script>jqxbuttons.js</Script>
+		<Script>jqxscrollbar.js</Script>
+		<Script>jqxdatatable.js</Script>
+    </Resources>
+	<Script>
+		<![CDATA[
+			var chartContainer = document.createElement("div");
+			chartContainer.setAttribute("id","dataTable");
+			chartContainer.setAttribute("style","width:600px; height: 400px");
+			$("#controlAddIn").get(0).appendChild(chartContainer);
+			
+			Microsoft.Dynamics.NAV.InvokeExtensibilityMethod('ControlAddInReady');
+		]]>
+	</Script>
+    
+    <RequestedHeight>400</RequestedHeight>
+    <RequestedWidth>600</RequestedWidth>
+    <VerticalStretch>false</VerticalStretch>
+    <HorizontalStretch>false</HorizontalStretch>
+</Manifest>

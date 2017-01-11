@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavBrowserControl", "NavBrowserControl\NavBrowserControl.csproj", "{C960725B-5D4F-4C85-8459-CE8A353A2D51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavAddressBar", "NavAddressBar\NavAddressBar.csproj", "{2A0AEE2F-4697-4236-9042-80FA06C22357}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C960725B-5D4F-4C85-8459-CE8A353A2D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C960725B-5D4F-4C85-8459-CE8A353A2D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C960725B-5D4F-4C85-8459-CE8A353A2D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C960725B-5D4F-4C85-8459-CE8A353A2D51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A0AEE2F-4697-4236-9042-80FA06C22357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A0AEE2F-4697-4236-9042-80FA06C22357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A0AEE2F-4697-4236-9042-80FA06C22357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A0AEE2F-4697-4236-9042-80FA06C22357}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,70 @@
+OBJECT Page 50704 JavaScript Table
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  CONTROLS
+  {
+    { 1170000000;;Container;
+                Name=Control1;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Field     ;
+                Name=CustomersTable;
+                ControlAddIn=[CustomTableControl;PublicKeyToken=04c1cb1184321c8b] }
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE ConvertString@1170000002(String@1170000000 : Text) : Text;
+    VAR
+      I@1170000001 : Integer;
+      ConvertedString@1170000003 : Text;
+    BEGIN
+      FOR I := 1 TO STRLEN(String) DO
+        CASE String[I] OF
+          '"' :
+            ConvertedString := ConvertedString + '\"';
+          ELSE
+            ConvertedString := ConvertedString + FORMAT(String[I]);
+        END;
+
+      EXIT(ConvertedString);
+    END;
+
+    EVENT CustomersTable@-2::ControlAddInReady@1();
+    VAR
+      Customer@1003 : Record 18;
+      JsonString@1001 : Text;
+      IsLastRecord@1000 : Boolean;
+    BEGIN
+      IF Customer.FINDSET THEN BEGIN
+        JsonString := '[';
+        REPEAT
+          JsonString := JsonString + '{';
+          JsonString := JsonString + '"No_":"' + Customer."No." + '",';
+          JsonString := JsonString + '"Name":"' + ConvertString(Customer.Name) + '"';
+          JsonString := JsonString + '}';
+          IsLastRecord := Customer.NEXT = 0;
+          IF NOT IsLastRecord THEN
+            JsonString := JsonString + ',';
+        UNTIL IsLastRecord;
+        JsonString := JsonString + ']';
+      END;
+
+      CurrPage.CustomersTable.UpdateDataTable(JsonString);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

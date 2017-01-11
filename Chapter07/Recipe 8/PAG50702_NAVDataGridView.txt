@@ -1,0 +1,65 @@
+OBJECT Page 50702 NAVDataGridView
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    CaptionML=ENU=Customers;
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                Name=CustomTable;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Field     ;
+                Name=Customers;
+                ControlAddIn=[NAVDataGridView;PublicKeyToken=ff653897bbd68dc0];
+                OnControlAddIn=BEGIN
+                                 UpdateControl;
+                               END;
+
+                ShowCaption=No }
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE UpdateControl@1();
+    VAR
+      Customer@1003 : Record 18;
+      DataTable@1002 : DotNet "'System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Data.DataTable";
+      DataColumn@1001 : DotNet "'System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Data.DataColumn";
+      DataRow@1000 : DotNet "'System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Data.DataRow";
+    BEGIN
+      DataTable := DataTable.DataTable;
+
+      DataColumn := DataColumn.DataColumn;
+      DataColumn.ColumnName := 'No.';
+      DataTable.Columns.Add(DataColumn);
+
+      DataColumn := DataColumn.DataColumn;
+      DataColumn.ColumnName := 'Name';
+      DataTable.Columns.Add(DataColumn);
+
+      Customer.FINDSET;
+      REPEAT
+        DataRow := DataTable.NewRow;
+        DataRow.Item(0,Customer."No.");
+        DataRow.Item(1,Customer.Name);
+        DataTable.Rows.Add(DataRow);
+      UNTIL Customer.NEXT = 0;
+
+      CurrPage.Customers.UpdateView(DataTable);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

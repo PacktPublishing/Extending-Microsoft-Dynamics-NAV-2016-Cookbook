@@ -1,0 +1,78 @@
+OBJECT Page 50211 NAV Services List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table50211;
+    PageType=List;
+    SourceTableTemporary=Yes;
+    ActionList=ACTIONS
+    {
+      { 6       ;    ;ActionContainer;
+                      Name=Services;
+                      ActionContainerType=ActionItems }
+      { 7       ;1   ;Action    ;
+                      Name=Refresh;
+                      Image=Refresh;
+                      OnAction=BEGIN
+                                 RefreshServicesList;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Display Name" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Service Name" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr=Status }
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE RefreshServicesList@1();
+    VAR
+      NavServiceInfo@1003 : DotNet "'NavServiceController, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'.NavServiceController.NavServiceInfo";
+      XmlDoc@1002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";
+      XmlNode@1001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode";
+      NextID@1000 : Integer;
+    BEGIN
+      XmlDoc := NavServiceInfo.GetNavServices;
+
+      DELETEALL;
+      NextID := 1;
+      FOREACH XmlNode IN XmlDoc.DocumentElement.ChildNodes DO BEGIN
+        ID := NextID;
+        "Display Name" := XmlNode.SelectSingleNode('DisplayName').InnerText;
+        "Service Name" := XmlNode.SelectSingleNode('ServiceName').InnerText;
+        Status := XmlNode.SelectSingleNode('Status').InnerText;
+        INSERT;
+
+        NextID += 1;
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,122 @@
+OBJECT Page 50202 File Storage
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table50202;
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 4       ;    ;ActionContainer;
+                      Name=File;
+                      ActionContainerType=ActionItems }
+      { 5       ;1   ;Action    ;
+                      Name=Import;
+                      OnAction=VAR
+                                 FileStorage@1003 : Record 50202;
+                                 ClientFileName@1001 : Text;
+                                 ServerFileName@1002 : Text;
+                               BEGIN
+                                 ClientFileName := FileManagement.OpenFileDialog('File to import','','MS Word documents (*.doc, *.docx)|*.doc;*.docx,');
+                                 IF ClientFileName = '' THEN
+                                   EXIT;
+
+                                 ServerFileName := FileManagement.UploadFileSilent(ClientFileName);
+
+                                 FileStorage."File Name" := ClientFileName;
+                                 FileStorage.Document.IMPORT(ServerFileName);
+                                 FileStorage.INSERT;
+
+                                 FileManagement.DeleteServerFile(ServerFileName);
+                               END;
+                                }
+      { 6       ;1   ;Action    ;
+                      Name=Edit;
+                      OnAction=VAR
+                                 ClientFileName@1001 : Text;
+                               BEGIN
+                                 IF NOT Document.HASVALUE THEN
+                                   EXIT;
+
+                                 ClientFileName := BLOBExport(Rec);
+                                 ClientFileName := OpenEditWordDocument(ClientFileName);
+
+                                 IF CONFIRM('Do you want to import the modified document?') THEN
+                                   BLOBImport(Rec,ClientFileName);
+
+                                 FileManagement.DeleteClientFile(ClientFileName);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="File Name" }
+
+  }
+  CODE
+  {
+    VAR
+      FileManagement@1000 : Codeunit 419;
+
+    LOCAL PROCEDURE OpenEditWordDocument@3(ClientFileName@1002 : Text) : Text;
+    VAR
+      WordApp@1003 : DotNet "'Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Word.ApplicationClass" RUNONCLIENT;
+      WordHelper@1004 : DotNet "'Microsoft.Dynamics.Nav.Integration.Office, Version=9.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Integration.Office.Word.WordHelper" RUNONCLIENT;
+      WordHandler@1000 : DotNet "'Microsoft.Dynamics.Nav.Integration.Office, Version=9.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Integration.Office.Word.WordHandler" RUNONCLIENT;
+      WordDocument@1001 : DotNet "'Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Word.Document" RUNONCLIENT;
+      ErrorMessage@1005 : Text;
+    BEGIN
+      WordApp := WordHelper.GetApplication(ErrorMessage);
+      IF ISNULL(WordApp) THEN
+        ERROR(ErrorMessage);
+
+      WordHandler := WordHandler.WordHandler;
+      WordDocument := WordHelper.CallOpen(WordApp,ClientFileName,FALSE,FALSE);
+      WordDocument.ActiveWindow.Caption := "File Name";
+      WordDocument.Application.Visible := TRUE;
+      WordDocument.Activate;
+
+      EXIT(WordHandler.WaitForDocument(WordDocument));
+    END;
+
+    LOCAL PROCEDURE BLOBExport@4(FileStorage@1000 : Record 50202) : Text;
+    VAR
+      TempBlob@1001 : Record 99008535;
+    BEGIN
+      FileStorage.CALCFIELDS(Document);
+
+      TempBlob.INIT;
+      TempBlob.Blob := FileStorage.Document;
+      EXIT(FileManagement.BLOBExport(TempBlob,FileStorage."File Name",FALSE));
+    END;
+
+    LOCAL PROCEDURE BLOBImport@5(VAR FileStorage@1001 : Record 50202;ClientFileName@1002 : Text);
+    VAR
+      TempBlob@1000 : Record 99008535;
+    BEGIN
+      FileManagement.BLOBImport(TempBlob,ClientFileName);
+      FileStorage.Document := TempBlob.Blob;
+      FileStorage.MODIFY;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

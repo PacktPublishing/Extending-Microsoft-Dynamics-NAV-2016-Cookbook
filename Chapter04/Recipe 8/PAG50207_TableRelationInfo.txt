@@ -1,0 +1,71 @@
+OBJECT Page 50207 Table Relation Info
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table2000000001;
+    SourceTableView=WHERE(Type=CONST(Table));
+    PageType=List;
+    OnAfterGetCurrRecord=BEGIN
+                           CurrPage.TableFieldsFactbox.PAGE.SetTableNo(ID);
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 5       ;    ;ActionContainer;
+                      Name=1;
+                      ActionContainerType=NewDocumentItems }
+      { 6       ;1   ;Action    ;
+                      Name=2;
+                      OnAction=VAR
+                                 ObjectMetadata@1000 : Record 2000000071;
+                                 Stream@1001 : OutStream;
+                               BEGIN
+                                 ObjectMetadata.GET(Type,ID);
+                                 ObjectMetadata.CALCFIELDS(Metadata);
+                                 //ObjectMetadata.Metadata.CREATEOUTSTREAM(Stream);
+                                 ObjectMetadata.Metadata.EXPORT('c:\work\temp\test.xml');
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr=ID }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr=Name }
+
+    { 8   ;0   ;Container ;
+                ContainerType=FactBoxArea }
+
+    { 7   ;1   ;Part      ;
+                Name=TableFieldsFactbox;
+                SubPageLink=TableNo=FIELD(ID);
+                PagePartID=Page50208;
+                Enabled=FALSE;
+                PartType=Page }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

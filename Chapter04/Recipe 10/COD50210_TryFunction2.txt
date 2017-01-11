@@ -1,0 +1,37 @@
+OBJECT Codeunit 50210 TryFunction2
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            IF NOT InsertCustomer THEN
+              MESSAGE(GETLASTERRORTEXT);
+          END;
+
+  }
+  CODE
+  {
+
+    [TryFunction]
+    LOCAL PROCEDURE InsertCustomer@1();
+    VAR
+      Customer@1000 : Record 18;
+    BEGIN
+      Customer.VALIDATE("No.",'TEST');
+      Customer.VALIDATE(Name,'Test customer');
+      Customer.INSERT;
+
+      Customer.VALIDATE("Customer Disc. Group",'TEST GROUP');
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

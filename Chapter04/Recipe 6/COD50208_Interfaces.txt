@@ -1,0 +1,55 @@
+OBJECT Codeunit 50208 Interfaces
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            List@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+            CultureInfo@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Globalization.CultureInfo";
+            StringComparer@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.StringComparer";
+            Type@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Type";
+            Activator@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Activator";
+            IComparer@1008 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.IComparer`1";
+          BEGIN
+            List := Activator.CreateInstance(Type.GetType('System.Collections.Generic.List`1[[System.String]]'));
+
+            List.Add('calle');
+            List.Add('calor');
+
+            CultureInfo := CultureInfo.CultureInfo('es-ES_tradnl');
+            StringComparer := StringComparer.Create(CultureInfo, FALSE);
+
+            IComparer := StringComparer;
+            List.Sort(IComparer);
+
+            ShowResult(List);
+          END;
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE ShowResult@2(List@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1");
+    VAR
+      NewLine@1001 : Char;
+      MsgText@1002 : Text;
+      I@1003 : Integer;
+    BEGIN
+      NewLine := 13;
+      FOR I := 0 TO List.Count - 1 DO
+        MsgText := MsgText + FORMAT(List.Item(I)) + FORMAT(NewLine);
+
+      MESSAGE(MsgText);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,34 @@
+OBJECT Table 50210 File System Event
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer        }
+    { 2   ;   ;Path                ;Text250        }
+    { 3   ;   ;Name                ;Text100        }
+    { 4   ;   ;Change Type         ;Option        ;OptionString=All,Changed,Created,Deleted,Renamed }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,139 @@
+OBJECT Page 50203 ServerSide DotNet
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    ActionList=ACTIONS
+    {
+      { 1       ;    ;ActionContainer;
+                      Name=RSS;
+                      ActionContainerType=ActionItems }
+      { 2       ;1   ;Action    ;
+                      Name=Get Feed;
+                      OnAction=BEGIN
+                                 CLEAR(XmlDoc);
+                                 CLEAR(XmlNodeList);
+                                 CurrNode := 0;
+
+                                 XmlDoc := XmlDoc.XmlDocument;
+                                 XmlDoc.Load('http://articlefeeds.nasdaq.com/nasdaq/categories?category=Basics&format=xml');
+
+                                 XmlNodeList := XmlDoc.SelectNodes('/rss/channel/item');
+
+                                 ShowRSSItem;
+                                 SetButtonsActive;
+                               END;
+                                }
+      { 7       ;1   ;Action    ;
+                      Name=Previous;
+                      Enabled=PreviousButtonEnabled;
+                      OnAction=BEGIN
+                                 IF CurrNode > 0 THEN
+                                   CurrNode -= 1;
+                                 ShowRSSItem;
+
+                                 SetButtonsActive;
+                               END;
+                                }
+      { 8       ;1   ;Action    ;
+                      Name=Next;
+                      Enabled=NextButtonEnabled;
+                      OnAction=BEGIN
+                                 IF CurrNode < XmlNodeList.Count - 1 THEN
+                                   CurrNode += 1;
+                                 ShowRSSItem;
+
+                                 SetButtonsActive;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 3   ;    ;Container ;
+                Name=RSS Reader;
+                ContainerType=ContentArea }
+
+    { 5   ;1   ;Field     ;
+                Name=Title;
+                SourceExpr=Title }
+
+    { 4   ;1   ;Field     ;
+                Name=Description;
+                SourceExpr=Description;
+                MultiLine=Yes }
+
+  }
+  CODE
+  {
+    VAR
+      XmlDoc@1003 : DotNet "'System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";
+      XmlNodeList@1002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeList";
+      Title@1001 : Text;
+      Description@1000 : Text;
+      CurrNode@1004 : Integer;
+      NextButtonEnabled@1005 : Boolean;
+      PreviousButtonEnabled@1006 : Boolean;
+
+    LOCAL PROCEDURE ShowRSSItem@1();
+    BEGIN
+      Title := XmlNodeList.Item(CurrNode).SelectSingleNode('./title').InnerText;
+      Description := XmlNodeList.Item(CurrNode).SelectSingleNode('./description').InnerText;
+    END;
+
+    LOCAL PROCEDURE SetButtonsActive@2();
+    BEGIN
+      IF XmlNodeList.Count IN [0,1] THEN BEGIN
+        PreviousButtonEnabled := FALSE;
+        NextButtonEnabled := FALSE;
+      END
+      ELSE IF CurrNode = 0 THEN BEGIN
+        PreviousButtonEnabled := FALSE;
+        NextButtonEnabled := TRUE;
+      END
+      ELSE IF CurrNode = XmlNodeList.Count - 1 THEN BEGIN
+        NextButtonEnabled := FALSE;
+        PreviousButtonEnabled := TRUE;
+      END
+      ELSE BEGIN
+        NextButtonEnabled := TRUE;
+        PreviousButtonEnabled := TRUE;
+      END;
+    END;
+
+    EVENT XmlDoc@1003::NodeInserting@94(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    EVENT XmlDoc@1003::NodeInserted@95(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    EVENT XmlDoc@1003::NodeRemoving@96(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    EVENT XmlDoc@1003::NodeRemoved@97(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    EVENT XmlDoc@1003::NodeChanging@98(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    EVENT XmlDoc@1003::NodeChanged@99(sender@1001 : Variant;e@1000 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNodeChangedEventArgs");
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

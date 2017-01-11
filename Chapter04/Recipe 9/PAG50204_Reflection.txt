@@ -1,0 +1,83 @@
+OBJECT Page 50205 Reflection
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    ActionList=ACTIONS
+    {
+      { 1       ;    ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 2       ;1   ;Action    ;
+                      Name=Sort;
+                      OnAction=BEGIN
+                                 RunFunction('Sort');
+                               END;
+                                }
+      { 3       ;1   ;Action    ;
+                      Name=Reverse;
+                      OnAction=BEGIN
+                                 RunFunction('Reverse');
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE RunFunction@1(FunctionName@1001 : Text);
+    VAR
+      Activator@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Activator";
+      Type@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Type";
+      TypesArray@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      MethodInfo@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.MethodInfo";
+      Args@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      ItemList@1010 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+    BEGIN
+      ItemList := Activator.CreateInstance(Type.GetType('System.Collections.Generic.List`1[[System.String]]'));
+      InitializeList(ItemList);
+
+      Type := ItemList.GetType;
+      TypesArray := TypesArray.CreateInstance(Type.GetType('System.Type'),0);
+      MethodInfo := Type.GetMethod(FunctionName,TypesArray);
+
+      Args := Args.List;
+      MethodInfo.Invoke(ItemList, Args.ToArray);
+
+      ShowResult(ItemList);
+    END;
+
+    LOCAL PROCEDURE InitializeList@4(ItemList@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1");
+    VAR
+      Item@1001 : Record 27;
+    BEGIN
+      Item.FINDSET;
+      REPEAT
+        ItemList.Add(Item.Description);
+      UNTIL Item.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE ShowResult@2(ItemList@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1");
+    VAR
+      MsgText@1002 : Text;
+      I@1001 : Integer;
+    BEGIN
+      FOR I := 0 TO ItemList.Count - 1 DO
+        MsgText := MsgText + FORMAT(ItemList.Item(I)) + '\';
+
+      MESSAGE(MsgText);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

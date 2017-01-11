@@ -1,0 +1,111 @@
+OBJECT Page 50212 NAV Services Controller
+{
+  OBJECT-PROPERTIES
+  {
+    Date=;
+    Time=;
+    Modified=Yes;
+    Version List=PACKT;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    SourceTable=Table50211;
+    PageType=List;
+    SourceTableTemporary=Yes;
+    ActionList=ACTIONS
+    {
+      { 6       ;    ;ActionContainer;
+                      Name=Services;
+                      ActionContainerType=ActionItems }
+      { 7       ;1   ;Action    ;
+                      Name=Refresh;
+                      Image=Refresh;
+                      OnAction=BEGIN
+                                 RefreshServicesList;
+                               END;
+                                }
+      { 8       ;1   ;Action    ;
+                      Name=Start;
+                      OnAction=BEGIN
+                                 IF "Service Name" <> '' THEN
+                                   ServiceStatusController.StartService("Service Name");
+                               END;
+                                }
+      { 9       ;1   ;Action    ;
+                      Name=Stop;
+                      OnAction=BEGIN
+                                 IF "Service Name" <> '' THEN
+                                   ServiceStatusController.StopService("Service Name");
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Display Name" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Service Name" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr=Status }
+
+  }
+  CODE
+  {
+    VAR
+      ServiceStatusController@1000 : DotNet "'NavServiceController, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'.NavServiceController.NavServiceStatusController" WITHEVENTS RUNONCLIENT;
+
+    LOCAL PROCEDURE RefreshServicesList@1();
+    VAR
+      NavServiceInfo@1003 : DotNet "'NavServiceController, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'.NavServiceController.NavServiceInfo" RUNONCLIENT;
+      XmlDoc@1002 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument" RUNONCLIENT;
+      XmlNode@1001 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlNode" RUNONCLIENT;
+      NextID@1000 : Integer;
+    BEGIN
+      IF ISNULL(ServiceStatusController) THEN
+        ServiceStatusController := ServiceStatusController.NavServiceStatusController;
+      XmlDoc := NavServiceInfo.GetNavServices;
+
+      DELETEALL;
+      NextID := 1;
+      FOREACH XmlNode IN XmlDoc.DocumentElement.ChildNodes DO BEGIN
+        ID := NextID;
+        "Display Name" := XmlNode.SelectSingleNode('DisplayName').InnerText;
+        "Service Name" := XmlNode.SelectSingleNode('ServiceName').InnerText;
+        Status := XmlNode.SelectSingleNode('Status').InnerText;
+        INSERT;
+
+        NextID += 1;
+      END;
+    END;
+
+    EVENT ServiceStatusController@1000::ServiceStarted@9(sender@1001 : Variant;e@1000 : Text);
+    BEGIN
+      MESSAGE('Service started ' + e);
+    END;
+
+    EVENT ServiceStatusController@1000::ServiceStopped@10(sender@1001 : Variant;e@1000 : Text);
+    BEGIN
+      MESSAGE('Service stopped ' + e);
+    END;
+
+    EVENT ServiceStatusController@1000::OperationFailed@11(sender@1001 : Variant;e@1000 : Text);
+    BEGIN
+      MESSAGE('Operation failed ' + e);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

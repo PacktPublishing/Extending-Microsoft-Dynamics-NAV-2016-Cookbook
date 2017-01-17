@@ -3,6 +3,8 @@ Code bundle for Extending Microsoft Dynamics NAV 2016 Cookbook
 
 This is the code repository for [Extending Microsoft Dynamics NAV 2016 Cookbook](hhttps://www.packtpub.com/application-development/extending-microsoft-dynamics-nav-2016-cookbook?utm_source=github&utm_medium=repository&utm_content=9781786460608), published by Packt. It contains all the supporting project files necessary to work through the book from start to finish.
 
+There are no code files for chapter 6 and chapter 10. Most of the code in chapter 6 are generated automatically by Visual Studio with small manual modifications. Chapter 10 is all about PowerShell command-line interface, hence no code files too.
+
 ##Instructions and Navigation
 All of the code is organized into folders. Each folder starts with number followed by the application name. For example, Chapter02.
 

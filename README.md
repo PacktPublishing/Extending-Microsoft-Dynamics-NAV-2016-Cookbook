@@ -27,25 +27,25 @@ Software and Hardware List
 |          | with Developer license    |   Windows        |  Proprietary        |                                          |          
 |          |                           |                                        |
 | All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?id=29062   
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 | 3        |  Visual Studio 2012       | Windows          |Proprietary, can be  | https://www.microsoft.com/net/core        |
 |          |   Professional            |                  |  replaced with free |                                           |
 |          |                           |                  | Microsoft SQL Server|                                           |
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 |          |                           |                  |  2012 Report Builder|                                           |
 |3, 4, 5   | Microsoft Office  2016    | Windows          | Proprietary         |
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 |   3      |  Power BI                 |                  |  Free               | https://powerbi.microsoft.com/en-us/      |
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 |   3      |   R                       |                  |  Free               |  https://cran.r-project.org               |
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 |4, 5, 7, 8| Visual Studio 2012        |                  | Proprietary, can be |
-|             Professional                                   replaced with free   https://code.visualstudio.com/            |
-|                                                            Visual Studio Code  
-|          |                           |                  |                     |                                | 
+|          |  Professional             |                  |  replaced with free |https://code.visualstudio.com/             |
+|          |                           |                  |  Visual Studio Code |
+|          |                           |                  |                     |                                           | 
 |    6     | SharePoint Server 2016 Or |                  |  Proprietary        |                                           |   
 |          |  SharePoint Online        |                  |
-|          |                           |                  |                     |                                | 
+|          |                           |                  |                     |                                           | 
 |    8     | Java SE Development Kit   |                  | Free                |http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 |          |                           |                  |                       
 |    8     | IDE Eclipse               |                  | Free                |https://www.eclipse.org/downloads/download.php?file=/oomph/epp/neon/R1/eclipse-inst-win64.exe

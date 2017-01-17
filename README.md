@@ -24,7 +24,7 @@ Software and Hardware List
 | Chapter  | Software required         | OS required      | Free/Proprietary    | Download links to the software           |
 | -------- | ------------------------  | -----------------|---------------------|------------------------------------------|
 | All      |Microsoft Dynamics Nav 2016|
-|          | with Developer license    | Windows          |  Proprietary        |                                          |          
+|           with Developer license       Windows          |  Proprietary        |                                          |          
 |          |                           |                                        |
 | All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?id=29062   
 |          |                           |                  |                     |                                | 

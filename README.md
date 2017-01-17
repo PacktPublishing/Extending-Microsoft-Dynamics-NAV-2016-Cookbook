@@ -49,11 +49,11 @@ Software and Hardware List
 
 ##Related IBM topics:
 
-* [Entity Framework 4.1: Expert’s Cookbook](https://www.packtpub.com/application-development/entity-framework-41-expert%E2%80%99s-cookbook?utm_source=github&utm_medium=repository&utm_content=9781849684460)
+* [Programming Microsoft Dynamics™ NAV 2015](https://www.packtpub.com/big-data-and-business-intelligence/programming-microsoft-dynamics%E2%84%A2-nav-2015?utm_source=github&utm_medium=repository&utm_content=9781784394202)
 
-* [Mastering Entity Framework](https://www.packtpub.com/application-development/mastering-entity-framework?utm_source=github&utm_medium=repository&utm_content=9781784391003)
+* [Microsoft Dynamics CRM 2016 Customization - Second Edition](https://www.packtpub.com/application-development/microsoft-dynamics-crm-2016-customization-second-edition?utm_source=github&utm_medium=repository&utm_content=9781785881510)
 
-* [Entity Framework Tutorial - Second Edition](https://www.packtpub.com/application-development/entity-framework-tutorial-second-edition?utm_source=github&utm_medium=repository&utm_content=9781783550012)
+* [Microsoft Dynamics NAV 2015 Professional Reporting](https://www.packtpub.com/big-data-and-business-intelligence/microsoft-dynamics-nav-2015-professional-reporting?utm_source=github&utm_medium=repository&utm_content=9781785284731)
 
 ### Suggestions and Feedback
 [Click here] (https://docs.google.com/forms/d/e/1FAIpQLSe5qwunkGf6PUvzPirPDtuy1Du5Rlzew23UBp2S-P3wB-GcwQ/viewform) if you have any feedback or suggestions.

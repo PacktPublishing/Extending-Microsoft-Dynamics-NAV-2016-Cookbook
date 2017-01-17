@@ -23,7 +23,7 @@ Software and Hardware List
 
 | Chapter  | Software required         | OS required      | Free/Proprietary    | Download links to the software           |
 | -------- | ------------------------  | -----------------|---------------------|------------------------------------------|
- All        Microsoft Dynamics Nav 2016
+| All      |Microsoft Dynamics Nav 2016|
 |          | with Developer license    | Windows          |  Proprietary        |                                          |          
 |          |                           |                                        |
 | All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?id=29062   
@@ -40,8 +40,8 @@ Software and Hardware List
 |   3      |   R                       |                  |  Free               |  https://cran.r-project.org               |
 |          |                           |                  |                     |                                | 
 |4, 5, 7, 8| Visual Studio 2012        |                  | Proprietary, can be |
-             Professional                                   replaced with free   https://code.visualstudio.com/            |
-                                                            Visual Studio Code  
+|             Professional                                   replaced with free   https://code.visualstudio.com/            |
+|                                                            Visual Studio Code  
 |          |                           |                  |                     |                                | 
 |    6     | SharePoint Server 2016 Or |                  |  Proprietary        |                                           |   
 |          |  SharePoint Online        |                  |

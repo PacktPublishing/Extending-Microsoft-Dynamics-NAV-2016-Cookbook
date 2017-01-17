@@ -23,8 +23,8 @@ Software and Hardware List
 | -------- | ------------------------  | -----------------|---------------------|------------------------------------------|
 | All      |Microsoft Dynamics Nav     | Windows          |  Proprietary        |                                          |          
 |          |2016 with Developer license|                  |                     |                                          |
-| All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?
-|          |                           |                  |                     | id=29062                                  | 
+| All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?id=29062   
+|          |                           |                  |                     |                                | 
 | 3        |  Visual Studio 2012       | Windows          |Proprietary, can be  | https://www.microsoft.com/net/core        |
 |          |   Professional            |                  |  replaced with free |                                           |
 |          |                           |                  | Microsoft SQL Server|                                           |
@@ -37,12 +37,12 @@ Software and Hardware List
 |          |                           |                  | Visual Studio Code  |
 |    6     | SharePoint Server 2016 Or |                  |  Proprietary        |                                           |   
 |          |  SharePoint Online        |                  |
-|    8     | Java SE Development Kit   |                  | Free                |http://www.oracle.com/technetwork/java/
-|          |                           |                  |                       javase/downloads/jdk8-downloads-2133151.html
-|    8     | IDE Eclipse               |                  | Free                |https://www.eclipse.org/downloads/download.php?
-|          |                           |                  |                      file=/oomph/epp/neon/R1/eclipse-inst-win64.exe  
-|   10     |Windows Management         |                  | Free                |https://www.microsoft.com/enus/download/details.aspx?
-|          | Framework 3.0             | Windows 7        |                     | id=34595     
+|    8     | Java SE Development Kit   |                  | Free                |http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+|          |                           |                  |                       
+|    8     | IDE Eclipse               |                  | Free                |https://www.eclipse.org/downloads/download.php?file=/oomph/epp/neon/R1/eclipse-inst-win64.exe
+|          |                           |                  |                        
+|   10     |Windows Management         |                  | Free                |https://www.microsoft.com/enus/download/details.aspx?id=34595
+|          | Framework 3.0             | Windows 7        |                     |      
 |          |                           | Integrated in    |                     |                          
 |          |                           | Windows 8 and    |                     |
 |          |                           | higher           |                     |

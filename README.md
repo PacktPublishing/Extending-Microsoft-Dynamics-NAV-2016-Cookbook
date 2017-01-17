@@ -29,10 +29,10 @@ Software and Hardware List
 | All      |MS SQL Server 2012 Express | Windows          |  Free               |https://www.microsoft.com/enus/download/details.aspx?id=29062   
 |          |                           |                  |                     |                                           | 
 | 3        |  Visual Studio 2012       | Windows          |Proprietary, can be  | https://www.microsoft.com/net/core        |
-|          |   Professional            |                  |  replaced with free |                                           |
+|          |   Professional            |                  | replaced with free  |                                           |
 |          |                           |                  | Microsoft SQL Server|                                           |
-|          |                           |                  |                     |                                           | 
-|          |                           |                  |  2012 Report Builder|                                           |
+|          |                           |                  | 2012 Report Builder |                                           | 
+|          |                           |                  |                     |                                           |
 |3, 4, 5   | Microsoft Office  2016    | Windows          | Proprietary         |
 |          |                           |                  |                     |                                           | 
 |   3      |  Power BI                 |                  |  Free               | https://powerbi.microsoft.com/en-us/      |

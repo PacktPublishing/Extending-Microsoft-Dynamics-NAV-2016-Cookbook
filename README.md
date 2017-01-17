@@ -50,11 +50,9 @@ Software and Hardware List
 |          |                           |                  |                       
 |    8     | IDE Eclipse               |                  | Free                |https://www.eclipse.org/downloads/download.php?file=/oomph/epp/neon/R1/eclipse-inst-win64.exe
 |          |                           |                  |                        
-|   10     |Windows Management         |                  | Free                |https://www.microsoft.com/enus/download/details.aspx?id=34595
-|          | Framework 3.0             | Windows 7        |                     |      
-|          |                           | Integrated in    |                     |                          
-|          |                           | Windows 8 and    |                     |
-|          |                           | higher           |                     |
+|   10     |Windows Management         | Windows 7,       | Free                |https://www.microsoft.com/enus/download/details.aspx?id=34595                               | Integrated,      |                     | 
+|          | Framework 3.0             | in Windows 8     |                     |                          
+|          |                           | and higher       |                     |
 
 ##Related IBM topics:
 

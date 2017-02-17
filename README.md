@@ -9,6 +9,7 @@ With the recipes in this book, you will customize NAV applications, develop busi
 
 The book then proceeds to reporting tools, which are the essential part of any enterprise software. You will build informative and interactive reports with built-in NAV tools, and use Visual Studio reporting tools and SQL Server Reporting Services to design and publish reports. Readers not so skillful in application development, but proficient in Excel or Power BI, will learn how to load data from NAV into their favorite reporting system and model comprehensive reports.
 
+##Instructions and Navigation
 All of the code is organized into folders. For example, Chapter02.
 
 The code will look like the following:

@@ -1,13 +1,17 @@
 # Extending Microsoft Dynamics NAV 2016 Cookbook
 
-This is the code repository for [Extending Microsoft Dynamics NAV 2016 Cookbook](hhttps://www.packtpub.com/application-development/extending-microsoft-dynamics-nav-2016-cookbook?utm_source=github&utm_medium=repository&utm_content=9781786460608), published by Packt. It contains all the supporting project files necessary to work through the book from start to finish.
+This is the code repository for [Extending Microsoft Dynamics NAV 2016 Cookbook](https://www.packtpub.com/application-development/extending-microsoft-dynamics-nav-2016-cookbook?utm_source=github&utm_medium=repository&utm_content=9781786460608), published by Packt. It contains all the supporting project files necessary to work through the book from start to finish.
 
 There are no code files for chapter 6 and chapter 10. Most of the code in chapter 6 are generated automatically by Visual Studio with small manual modifications. Chapter 10 is all about PowerShell command-line interface, hence no code files too.
 
-##Instructions and Navigation
-All of the code is organized into folders. Each folder starts with number followed by the application name. For example, Chapter02.
+## About the Book
+With the recipes in this book, you will customize NAV applications, develop business logic, extend user interfaces, and organize solutions with custom role centers arranged specifically for each functional role in the organization.
 
-You will see code something similar to the following:
+The book then proceeds to reporting tools, which are the essential part of any enterprise software. You will build informative and interactive reports with built-in NAV tools, and use Visual Studio reporting tools and SQL Server Reporting Services to design and publish reports. Readers not so skillful in application development, but proficient in Excel or Power BI, will learn how to load data from NAV into their favorite reporting system and model comprehensive reports.
+
+All of the code is organized into folders. For example, Chapter02.
+
+The code will look like the following:
 
 ```
 WITH ItemCertificateAction DO BEGIN

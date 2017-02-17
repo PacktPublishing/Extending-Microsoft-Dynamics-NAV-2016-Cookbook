@@ -1,5 +1,4 @@
-# Extending-Microsoft-Dynamics-NAV-2016-Cookbook
-Code bundle for Extending Microsoft Dynamics NAV 2016 Cookbook
+# Extending Microsoft Dynamics NAV 2016 Cookbook
 
 This is the code repository for [Extending Microsoft Dynamics NAV 2016 Cookbook](hhttps://www.packtpub.com/application-development/extending-microsoft-dynamics-nav-2016-cookbook?utm_source=github&utm_medium=repository&utm_content=9781786460608), published by Packt. It contains all the supporting project files necessary to work through the book from start to finish.
 
